@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account | Ibn Hajar Foundation-Zaria Portal</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script src="auth.js"></script>
+</head>
+<body style="background:var(--cream-dim);">
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="crumb"><a href="portal.html">Portal</a> / My Account</div>
+    <h1>My Account</h1>
+    <p style="color:rgba(255,255,255,.75); max-width:60ch; margin:0;">Update your password below.</p>
+  </div>
+</div>
+
+<section class="tight">
+  <div class="wrap" style="max-width:520px;">
+    <div class="card" id="account-card">
+      <p>Loading your account&hellip;</p>
+    </div>
+  </div>
+</section>
+
+<script src="script.js"></script>
+<script>
+  const __me = getCurrentUser();
+  const card = document.getElementById('account-card');
+  if(!__me){
+    card.innerHTML = '<p>You need to sign in to view this page.</p><a href="portal.html" class="btn btn-navy">Go to Portal Login &rarr;</a>';
+  } else {
+    card.innerHTML = `
+      <div style="margin-bottom:22px;">
+        <div class="badge">${__me.role}</div>
+        <h3 style="margin-top:12px;">${__me.name}</h3>
+        <p style="margin:0;">Username: <strong>${__me.username}</strong></p>
+      </div>
+      <form id="pw-form">
+        <div style="display:grid; gap:16px;">
+          <div>
+            <label for="cur-pw">Current Password</label>
+            <input id="cur-pw" type="password" required>
+          </div>
+          <div>
+            <label for="new-pw">New Password</label>
+            <input id="new-pw" type="password" required minlength="6">
+          </div>
+          <div>
+            <label for="confirm-pw">Confirm New Password</label>
+            <input id="confirm-pw" type="password" required minlength="6">
+          </div>
+          <button type="submit" class="btn btn-gold">Update Password &rarr;</button>
+        </div>
+      </form>
+      <p id="pw-status" role="status" hidden style="margin-top:16px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+      <div style="margin-top:26px; padding-top:20px; border-top:1px solid rgba(14,27,54,.08); display:flex; justify-content:space-between; align-items:center;">
+        <a href="${ROLE_PAGE[__me.role]}" style="color:var(--navy-mid); font-weight:600; font-size:.88rem;">&larr; Back to my dashboard</a>
+        <a href="javascript:void(0)" onclick="logout()" style="color:#b23434; font-weight:600; font-size:.88rem;">Sign out</a>
+      </div>
+    `;
+    document.getElementById('pw-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const cur = document.getElementById('cur-pw').value;
+      const n1 = document.getElementById('new-pw').value;
+      const n2 = document.getElementById('confirm-pw').value;
+      const status = document.getElementById('pw-status');
+      status.hidden = false;
+      if(n1 !== n2){ status.textContent = 'New password and confirmation do not match.'; return; }
+      const result = changePassword(__me.id, cur, n1);
+      status.textContent = result.ok ? 'Password updated successfully.' : result.msg;
+      if(result.ok) document.getElementById('pw-form').reset();
+    });
+  }
+</script>
+</body>
+</html>

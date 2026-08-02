@@ -6,6 +6,7 @@
 <title>Principal Dashboard | Ibn Hajar Foundation-Zaria Portal</title>
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
+<script src="auth.js"></script>
 </head>
 <body>
 <div class="dash-shell">
@@ -14,7 +15,7 @@
     <img src="logo.svg" alt="logo">
     <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
   </a>
-  <div class="dash-role-tag">Principal &middot; Full Access</div>
+  <div class="dash-role-tag" data-user-role>Principal · Full Access</div>
   <nav class="dash-nav">
       <a class="active" href="#overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
       <a class="" href="#admissions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Admissions</span></a>
@@ -23,18 +24,19 @@
       <a class="" href="#fees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span>Fees</span></a>
       <a class="" href="#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results</span></a>
       <a class="" href="#announcements"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11v2a1 1 0 001 1h2l4 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M15 8a4 4 0 010 8"/></svg><span>Announcements</span></a>
+      <a class="" href="#users-mgmt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg><span>Manage Users</span></a>
   </nav>
   <div class="exit">
-    <a href="portal.html">&larr; Switch role / Sign out</a><br>
-    <a href="index.html">&larr; Back to website</a>
+    <a href="account.html">Change password</a><br>
+    <a href="javascript:void(0)" onclick="logout()">&larr; Sign out</a>
   </div>
 </aside>
 <main class="dash-main">
 <div class="dash-topbar">
   <h1>Principal Dashboard</h1>
   <div class="dash-user">
-    <span>Principal</span>
-    <div class="avatar">PR</div>
+    <span data-user-name>&hellip;</span>
+    <div class="avatar" data-user-avatar>&middot;</div>
   </div>
 </div>
 <div class="dash-content">
@@ -128,9 +130,125 @@
     </div>
   </div>
 </div>
+
+<div class="panel" id="users-mgmt">
+  <h3>Manage Staff &amp; Parent Accounts</h3>
+  <p class="form-note" style="margin-top:-8px; margin-bottom:16px;">Create login accounts for staff and parents, reset a forgotten password, or block someone from signing in. Changes here take effect immediately &mdash; try creating an account, then signing in as them from the <a href="portal.html" style="color:var(--navy-mid); font-weight:600;">Portal login page</a>.</p>
+
+  <table class="dtable" id="users-table">
+    <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th></th></tr></thead>
+    <tbody id="users-table-body"><tr><td colspan="5">Loading&hellip;</td></tr></tbody>
+  </table>
+
+  <h4 style="margin:28px 0 14px; font-family:var(--font-display); font-size:1rem; color:var(--navy-deep);">Create New Account</h4>
+  <form id="create-user-form" class="form-grid">
+    <div><label for="cu-name">Full Name</label><input id="cu-name" required></div>
+    <div><label for="cu-username">Username</label><input id="cu-username" required></div>
+    <div><label for="cu-password">Temporary Password</label><input id="cu-password" type="text" required placeholder="e.g. Welcome@123"></div>
+    <div>
+      <label for="cu-role">Role</label>
+      <select id="cu-role">
+        <option>Class Teacher</option>
+        <option>Admin</option>
+        <option>Bursary</option>
+        <option>Parent</option>
+        <option>Principal</option>
+      </select>
+    </div>
+    <div class="full">
+      <label for="cu-extra">Assigned Class (if Class Teacher) or Child's Name (if Parent)</label>
+      <input id="cu-extra" placeholder="e.g. Primary 4 — or — Amina Yusuf Ibrahim">
+    </div>
+    <div class="full">
+      <button type="submit" class="btn btn-gold">Create Account &rarr;</button>
+    </div>
+  </form>
+  <p id="create-user-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+</div>
+
+<script>
+function renderUsersTable(){
+  const body = document.getElementById('users-table-body');
+  if(!body) return;
+  const users = getUsers();
+  body.innerHTML = '';
+  users.forEach(u => {
+    const tr = document.createElement('tr');
+    const statusPill = u.status === 'blocked'
+      ? '<span class="pill pill-owing">Blocked</span>'
+      : '<span class="pill pill-excellent">Active</span>';
+    const toggleLabel = u.status === 'blocked' ? 'Unblock' : 'Block';
+    const toggleClass = u.status === 'blocked' ? 'btn-approve' : 'btn-reject';
+    tr.innerHTML = `
+      <td>${u.name}</td>
+      <td>${u.username}</td>
+      <td>${u.role}${u.assignedClass ? ' · ' + u.assignedClass : ''}${u.childName ? ' · ' + u.childName : ''}</td>
+      <td>${statusPill}</td>
+      <td>
+        <button class="btn-xs ${toggleClass}" data-toggle="${u.id}">${toggleLabel}</button>
+        <button class="btn-xs btn-view" data-reset="${u.id}">Reset Password</button>
+      </td>`;
+    body.appendChild(tr);
+  });
+  body.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const users2 = getUsers();
+      const u = users2.find(x => x.id === btn.getAttribute('data-toggle'));
+      if(!u) return;
+      setUserStatus(u.id, u.status === 'blocked' ? 'active' : 'blocked');
+      renderUsersTable();
+    });
+  });
+  body.querySelectorAll('[data-reset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-reset');
+      const newPass = prompt('Enter a new temporary password for this account:');
+      if(newPass && newPass.length >= 6){
+        resetUserPassword(id, newPass);
+        alert('Password reset. Share the new temporary password with them securely — they will be asked to change it after logging in.');
+      } else if(newPass) {
+        alert('Password must be at least 6 characters.');
+      }
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', () => {
+  renderUsersTable();
+  const form = document.getElementById('create-user-form');
+  if(form){
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const role = document.getElementById('cu-role').value;
+      const extra = document.getElementById('cu-extra').value.trim();
+      const result = createUser({
+        name: document.getElementById('cu-name').value.trim(),
+        username: document.getElementById('cu-username').value.trim(),
+        password: document.getElementById('cu-password').value,
+        role: role,
+        assignedClass: role === 'Class Teacher' ? extra : '',
+        childName: role === 'Parent' ? extra : ''
+      });
+      const status = document.getElementById('create-user-status');
+      status.hidden = false;
+      if(result.ok){
+        status.textContent = 'Account created. They can now sign in from the Portal page with the username and temporary password you set.';
+        form.reset();
+        renderUsersTable();
+      } else {
+        status.textContent = result.msg;
+      }
+    });
+  }
+});
+</script>
+
 </div>
 </main>
 </div>
 <script src="script.js"></script>
+<script>
+  const __user = requireRole(['Principal']);
+  if (__user) paintUser(__user);
+</script>
 </body>
 </html>

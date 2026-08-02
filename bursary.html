@@ -6,6 +6,7 @@
 <title>Bursary Dashboard | Ibn Hajar Foundation-Zaria Portal</title>
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
+<script src="auth.js"></script>
 </head>
 <body>
 <div class="dash-shell">
@@ -14,7 +15,7 @@
     <img src="logo.svg" alt="logo">
     <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
   </a>
-  <div class="dash-role-tag">Bursary &middot; Fees</div>
+  <div class="dash-role-tag" data-user-role>Bursary</div>
   <nav class="dash-nav">
       <a class="active" href="#record-payment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
       <a class="" href="#record-payment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>Record Payment</span></a>
@@ -22,16 +23,16 @@
       <a class="" href="#reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V6a2 2 0 012-2h8l6 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 13h6M9 17h6"/></svg><span>Reports</span></a>
   </nav>
   <div class="exit">
-    <a href="portal.html">&larr; Switch role / Sign out</a><br>
-    <a href="index.html">&larr; Back to website</a>
+    <a href="account.html">Change password</a><br>
+    <a href="javascript:void(0)" onclick="logout()">&larr; Sign out</a>
   </div>
 </aside>
 <main class="dash-main">
 <div class="dash-topbar">
   <h1>Bursary Dashboard</h1>
   <div class="dash-user">
-    <span>Bursary</span>
-    <div class="avatar">BR</div>
+    <span data-user-name>&hellip;</span>
+    <div class="avatar" data-user-avatar>&middot;</div>
   </div>
 </div>
 <div class="dash-content">
@@ -90,5 +91,9 @@
 </main>
 </div>
 <script src="script.js"></script>
+<script>
+  const __user = requireRole(['Bursary']);
+  if (__user) paintUser(__user);
+</script>
 </body>
 </html>
