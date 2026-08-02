@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principal Dashboard | Ibn Hajar Foundation-Zaria Portal</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="dash-shell">
+<aside class="dash-sidebar">
+  <a class="brand-mini" href="index.html">
+    <img src="logo.svg" alt="logo">
+    <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
+  </a>
+  <div class="dash-role-tag">Principal &middot; Full Access</div>
+  <nav class="dash-nav">
+      <a class="active" href="#overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
+      <a class="" href="#admissions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Admissions</span></a>
+      <a class="" href="#students"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4.5-9 4.5-9-4.5z"/><path d="M7 10.5V16c0 1.5 2.5 3 5 3s5-1.5 5-3v-5.5"/></svg><span>Students</span></a>
+      <a class="" href="#staff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg><span>Staff</span></a>
+      <a class="" href="#fees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span>Fees</span></a>
+      <a class="" href="#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results</span></a>
+      <a class="" href="#announcements"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11v2a1 1 0 001 1h2l4 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M15 8a4 4 0 010 8"/></svg><span>Announcements</span></a>
+  </nav>
+  <div class="exit">
+    <a href="portal.html">&larr; Switch role / Sign out</a><br>
+    <a href="index.html">&larr; Back to website</a>
+  </div>
+</aside>
+<main class="dash-main">
+<div class="dash-topbar">
+  <h1>Principal Dashboard</h1>
+  <div class="dash-user">
+    <span>Principal</span>
+    <div class="avatar">PR</div>
+  </div>
+</div>
+<div class="dash-content">
+
+<div id="overview"></div>
+
+<div class="demo-banner">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+  <div><strong>Demo preview</strong> &mdash; sample data shown so you can see exactly what the Principal dashboard will do once Supabase is connected. As Principal you have full access to every student, staff member, class, result, fee record and admission application.</div>
+</div>
+
+<div class="stat-cards">
+  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Total Students</div></div>
+  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Total Staff</div></div>
+  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Fees Collected &mdash; This Term</div></div>
+  <div class="stat-card-sm"><div class="num">7</div><div class="label">Pending Admission Applications</div></div>
+</div>
+
+<div class="dash-grid-2">
+  <div>
+    <div class="panel" id="admissions">
+      <h3>Recent Admission Applications <span class="see-all">View all &rarr;</span></h3>
+      <table class="dtable">
+        <thead><tr><th>Applicant</th><th>Class Applying For</th><th>Submitted</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Amina Yusuf Ibrahim</td><td>Primary 3</td><td>2 days ago</td><td><span class="pill pill-pending">Pending</span></td>
+            <td><button class="btn-xs btn-approve">Approve</button> <button class="btn-xs btn-reject">Reject</button></td></tr>
+          <tr><td>Abdulrahman Musa</td><td>JSS 1</td><td>3 days ago</td><td><span class="pill pill-pending">Pending</span></td>
+            <td><button class="btn-xs btn-approve">Approve</button> <button class="btn-xs btn-reject">Reject</button></td></tr>
+          <tr><td>Khadija Sani</td><td>Primary 5</td><td>5 days ago</td><td><span class="pill pill-pending">Pending</span></td>
+            <td><button class="btn-xs btn-approve">Approve</button> <button class="btn-xs btn-reject">Reject</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="students">
+      <h3>Students by Class <span class="see-all">Manage students &rarr;</span></h3>
+      <table class="dtable">
+        <thead><tr><th>Class</th><th>Class Teacher</th><th>Students</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Primary 1</td><td>[Teacher Name]</td><td>[ ]</td><td><button class="btn-xs btn-view">View</button></td></tr>
+          <tr><td>Primary 4</td><td>[Teacher Name]</td><td>[ ]</td><td><button class="btn-xs btn-view">View</button></td></tr>
+          <tr><td>JSS 1</td><td>[Teacher Name]</td><td>[ ]</td><td><button class="btn-xs btn-view">View</button></td></tr>
+          <tr><td>JSS 3</td><td>[Teacher Name]</td><td>[ ]</td><td><button class="btn-xs btn-view">View</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="staff">
+      <h3>Staff Directory <span class="see-all">Manage staff &rarr;</span></h3>
+      <table class="dtable">
+        <thead><tr><th>Name</th><th>Role</th><th>Assigned To</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>[Staff Name]</td><td>Class Teacher</td><td>Primary 4</td><td><span class="pill pill-excellent">Active</span></td></tr>
+          <tr><td>[Staff Name]</td><td>Qur'an Instructor</td><td>All Boarders</td><td><span class="pill pill-excellent">Active</span></td></tr>
+          <tr><td>[Staff Name]</td><td>Admin</td><td>Front Office</td><td><span class="pill pill-excellent">Active</span></td></tr>
+          <tr><td>[Staff Name]</td><td>Bursary</td><td>Finance Office</td><td><span class="pill pill-excellent">Active</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel" id="fees">
+      <h3>Fee Collection &mdash; This Term</h3>
+      <div class="progress-row"><div class="top"><span>Primary 1&ndash;3</span><span>72%</span></div><div class="progress-bar"><div class="fill" style="width:72%"></div></div></div>
+      <div class="progress-row"><div class="top"><span>Primary 4&ndash;6</span><span>64%</span></div><div class="progress-bar"><div class="fill" style="width:64%"></div></div></div>
+      <div class="progress-row"><div class="top"><span>JSS 1&ndash;3</span><span>58%</span></div><div class="progress-bar"><div class="fill" style="width:58%"></div></div></div>
+      <p class="form-note" style="margin-top:6px;">Full breakdown available in the Bursary reports once payments are recorded.</p>
+    </div>
+
+    <div class="panel" id="results">
+      <h3>Results Entry Status</h3>
+      <table class="dtable">
+        <thead><tr><th>Class</th><th>Term 1 Results</th></tr></thead>
+        <tbody>
+          <tr><td>Primary 4</td><td><span class="pill pill-excellent">Submitted</span></td></tr>
+          <tr><td>JSS 1</td><td><span class="pill pill-fair">In progress</span></td></tr>
+          <tr><td>JSS 3</td><td><span class="pill pill-owing">Not started</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="announcements">
+      <h3>Post an Announcement</h3>
+      <form onsubmit="event.preventDefault(); alert('Demo only — this will publish to the website and notify parents once connected.');">
+        <label for="pr-ann">Message</label>
+        <textarea id="pr-ann" rows="3" placeholder="e.g. Resumption date for 2026/2027 session is..."></textarea>
+        <button type="submit" class="btn btn-navy" style="margin-top:12px;">Publish &rarr;</button>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+</main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

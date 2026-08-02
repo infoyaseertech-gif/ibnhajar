@@ -327,3 +327,104 @@ footer.site a:hover{ color:#fff; }
   border: 1px solid rgba(201,162,75,.4); padding: 5px 14px; border-radius: 20px;
   font-size:.74rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
 }
+
+/* =========================================================
+   DASHBOARD SHELL (Principal / Teacher / Admin / Bursary / Parent)
+   ========================================================= */
+.dash-shell{ display:flex; min-height:100vh; background: var(--cream-dim); }
+
+.dash-sidebar{
+  width:250px; flex:none; background: var(--navy-deep); color:#fff;
+  padding: 22px 16px; position:sticky; top:0; height:100vh; overflow-y:auto; z-index:40;
+}
+.dash-sidebar .brand-mini{ display:flex; gap:10px; align-items:center; padding:0 6px 22px; border-bottom:1px solid rgba(255,255,255,.12); margin-bottom:18px; }
+.dash-sidebar .brand-mini img{ width:32px; }
+.dash-sidebar .brand-mini .name{ font-family: var(--font-display); font-size:.86rem; font-weight:700; line-height:1.2; }
+.dash-role-tag{
+  margin: 0 6px 18px; padding:8px 12px; background: rgba(201,162,75,.14); border:1px solid rgba(201,162,75,.35);
+  border-radius: var(--radius); font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color: var(--gold-soft); font-weight:700;
+}
+.dash-nav{ display:grid; gap:3px; }
+.dash-nav a{
+  display:flex; gap:11px; align-items:center; padding: 10px 12px; border-radius: var(--radius);
+  color: rgba(255,255,255,.72); font-size:.87rem; font-weight:600;
+}
+.dash-nav a svg{ width:17px; height:17px; flex:none; }
+.dash-nav a.active{ background: rgba(255,255,255,.1); color:#fff; }
+.dash-nav a:hover{ background: rgba(255,255,255,.06); color:#fff; }
+.dash-nav .divider{ height:1px; background: rgba(255,255,255,.1); margin: 12px 6px; }
+.dash-sidebar .exit{ margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,.12); }
+.dash-sidebar .exit a{ color: rgba(255,255,255,.55); font-size:.8rem; }
+.dash-sidebar .exit a:hover{ color:#fff; }
+
+.dash-main{ flex:1; min-width:0; }
+.dash-topbar{
+  background:#fff; border-bottom: 1px solid rgba(14,27,54,.08); padding: 18px 32px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  position:sticky; top:0; z-index:30;
+}
+.dash-topbar h1{ font-size:1.35rem; margin:0; }
+.dash-user{ display:flex; align-items:center; gap:10px; font-size:.85rem; color: var(--ink-soft); }
+.dash-user .avatar{
+  width:34px; height:34px; border-radius:50%; background: var(--navy-mid); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem;
+}
+.dash-content{ padding: 28px 32px 60px; }
+
+.demo-banner{
+  background:#FFF6E0; border:1px solid var(--gold); color: var(--navy-deep);
+  padding: 13px 18px; border-radius: var(--radius); font-size:.85rem; margin-bottom: 26px;
+  display:flex; gap:10px; align-items:flex-start;
+}
+.demo-banner svg{ width:18px; height:18px; flex:none; color: var(--gold); margin-top:1px; }
+
+.stat-cards{ display:grid; grid-template-columns: repeat(4,1fr); gap:18px; margin-bottom: 30px; }
+@media (max-width: 980px){ .stat-cards{ grid-template-columns: repeat(2,1fr);} }
+.stat-card-sm{ background:#fff; border:1px solid rgba(14,27,54,.08); border-radius: var(--radius); padding: 20px; }
+.stat-card-sm .num{ font-family: var(--font-display); font-size:1.9rem; color: var(--navy-deep); font-weight:700; }
+.stat-card-sm .label{ font-size:.78rem; color: var(--ink-soft); margin-top:2px; }
+.stat-card-sm .delta{ font-size:.72rem; color:#1a7f4b; margin-top:6px; font-weight:600; }
+
+.dash-grid-2{ display:grid; grid-template-columns: 1.4fr 1fr; gap:22px; }
+@media (max-width: 980px){ .dash-grid-2{ grid-template-columns:1fr; } }
+.panel{ background:#fff; border:1px solid rgba(14,27,54,.08); border-radius: var(--radius); padding:22px 24px; margin-bottom:22px; }
+.panel h3{ font-size:1.02rem; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.panel h3 .see-all{ font-size:.78rem; color: var(--navy-mid); font-weight:600; }
+
+table.dtable{ width:100%; border-collapse:collapse; font-size:.86rem; }
+table.dtable th, table.dtable td{ padding:11px 12px; text-align:left; border-bottom:1px solid rgba(14,27,54,.07); }
+table.dtable thead th{ color: var(--ink-soft); font-weight:600; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; }
+table.dtable tbody tr:hover{ background: var(--cream-dim); }
+
+.pill{ display:inline-block; padding:3px 10px; border-radius:20px; font-size:.72rem; font-weight:700; }
+.pill-excellent{ background:#E4F5E9; color:#1a7f4b; }
+.pill-good{ background:#E6EEF9; color:#1B3A63; }
+.pill-fair{ background:#FDEFDD; color:#a35b1a; }
+.pill-paid{ background:#E4F5E9; color:#1a7f4b; }
+.pill-partial{ background:#FDEFDD; color:#a35b1a; }
+.pill-owing{ background:#FBE6E6; color:#b23434; }
+.pill-pending{ background:#EFEAF9; color:#5b3fa0; }
+
+.btn-xs{ font-size:.76rem; padding:7px 13px; border-radius:4px; font-weight:700; border:1px solid transparent; cursor:pointer; }
+.btn-approve{ background:#1a7f4b; color:#fff; }
+.btn-approve:hover{ background:#166b40; }
+.btn-reject{ background:#fff; color:#b23434; border-color:#b23434; }
+.btn-reject:hover{ background:#FBE6E6; }
+.btn-view{ background:#fff; color: var(--navy-mid); border-color: rgba(27,58,99,.3); }
+.btn-view:hover{ background: var(--cream-dim); }
+
+.progress-row{ margin-bottom:14px; }
+.progress-row .top{ display:flex; justify-content:space-between; font-size:.8rem; margin-bottom:5px; }
+.progress-bar{ height:8px; background: var(--cream-dim); border-radius:4px; overflow:hidden; }
+.progress-bar .fill{ height:100%; background: var(--gold); }
+
+.form-inline{ display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:14px; align-items:end; }
+.form-inline .field label{ margin-bottom:5px; }
+.form-inline button{ height:44px; }
+
+.attend-grid{ display:grid; grid-template-columns: 1fr auto auto auto; gap:10px; align-items:center; padding:10px 4px; border-bottom:1px solid rgba(14,27,54,.06); font-size:.88rem; }
+.attend-grid.head{ font-size:.72rem; text-transform:uppercase; color:var(--ink-soft); font-weight:700; letter-spacing:.04em; }
+
+.child-card{ display:flex; gap:16px; align-items:center; background:#fff; border:1px solid rgba(14,27,54,.08); border-radius:var(--radius); padding:22px; margin-bottom:24px; }
+.child-card .ph{ width:64px; height:64px; border-radius:50%; background:var(--cream-dim); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; color:var(--navy-mid); font-size:1.3rem; flex:none; }
+

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parent Dashboard | Ibn Hajar Foundation-Zaria Portal</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="dash-shell">
+<aside class="dash-sidebar">
+  <a class="brand-mini" href="index.html">
+    <img src="logo.svg" alt="logo">
+    <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
+  </a>
+  <div class="dash-role-tag">Parent &middot; My Child</div>
+  <nav class="dash-nav">
+      <a class="active" href="#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
+      <a class="" href="#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results</span></a>
+      <a class="" href="#fees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span>Fees</span></a>
+  </nav>
+  <div class="exit">
+    <a href="portal.html">&larr; Switch role / Sign out</a><br>
+    <a href="index.html">&larr; Back to website</a>
+  </div>
+</aside>
+<main class="dash-main">
+<div class="dash-topbar">
+  <h1>Parent Dashboard</h1>
+  <div class="dash-user">
+    <span>Parent</span>
+    <div class="avatar">PA</div>
+  </div>
+</div>
+<div class="dash-content">
+
+<div class="demo-banner">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+  <div><strong>Demo preview</strong> &mdash; sample data shown. Parents see only their own child's results and fee status &mdash; nothing about other students.</div>
+</div>
+
+<div class="child-card">
+  <div class="ph">AI</div>
+  <div>
+    <div style="font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); font-weight:700;">Your Child</div>
+    <h3 style="margin:2px 0 2px;">[Student Name]</h3>
+    <p style="margin:0; font-size:.88rem;">Primary 4 &middot; 2026/2027 Session</p>
+  </div>
+</div>
+
+<div class="dash-grid-2">
+  <div>
+    <div class="panel" id="results">
+      <h3>Academic Results &mdash; Term 1</h3>
+      <table class="dtable">
+        <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
+        <tbody>
+          <tr><td>Qur'an Memorization</td><td><span class="pill pill-excellent">Excellent</span></td></tr>
+          <tr><td>Tajweed</td><td><span class="pill pill-excellent">Excellent</span></td></tr>
+          <tr><td>Islamic Studies</td><td><span class="pill pill-good">Good</span></td></tr>
+          <tr><td>Mathematics</td><td><span class="pill pill-good">Good</span></td></tr>
+          <tr><td>English Language</td><td><span class="pill pill-fair">Fair</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel" id="fees">
+      <h3>Fee Status</h3>
+      <div class="progress-row"><div class="top"><span>Paid so far</span><span>&#8358;[ ] of &#8358;[ ]</span></div><div class="progress-bar"><div class="fill" style="width:68%"></div></div></div>
+      <table class="dtable" style="margin-top:14px;">
+        <thead><tr><th>Fee Type</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Tuition</td><td><span class="pill pill-paid">Paid</span></td></tr>
+          <tr><td>Hostel</td><td><span class="pill pill-paid">Paid</span></td></tr>
+          <tr><td>Feeding</td><td><span class="pill pill-partial">Partial</span></td></tr>
+          <tr><td>Uniform</td><td><span class="pill pill-owing">Owing</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+</main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

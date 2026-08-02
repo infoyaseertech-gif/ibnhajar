@@ -57,25 +57,25 @@
         <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l9 4.5v6c0 5-3.8 8.7-9 9.5-5.2-.8-9-4.5-9-9.5v-6z"/></svg></div>
         <h4>Principal</h4>
         <p>Full access &mdash; students, staff, fees, results &amp; admissions.</p>
-        <a href="#login" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
+        <a href="#login" onclick="setTimeout(()=>{const s=document.getElementById('login-role'); if(s) s.value='Principal';},50)" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
       </div>
       <div class="portal-card">
         <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V6a2 2 0 012-2h8l6 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg></div>
         <h4>Class Teacher</h4>
         <p>Manage your class list, attendance and student results.</p>
-        <a href="#login" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
+        <a href="#login" onclick="setTimeout(()=>{const s=document.getElementById('login-role'); if(s) s.value='Class Teacher';},50)" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
       </div>
       <div class="portal-card">
         <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div>
         <h4>Admin</h4>
         <p>Manage records, admissions and school announcements.</p>
-        <a href="#login" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
+        <a href="#login" onclick="setTimeout(()=>{const s=document.getElementById('login-role'); if(s) s.value='Admin';},50)" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
       </div>
       <div class="portal-card">
         <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></div>
         <h4>Bursary</h4>
         <p>Record payments, view balances and generate fee reports.</p>
-        <a href="#login" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
+        <a href="#login" onclick="setTimeout(()=>{const s=document.getElementById('login-role'); if(s) s.value='Bursary';},50)" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
       </div>
     </div>
   </div>
@@ -96,7 +96,7 @@
         </ul>
         <p class="form-note">Each parent account is linked only to their own child's records for privacy.</p>
       </div>
-      <a href="#login" class="btn btn-gold" style="justify-self:start;">Parent Sign In &rarr;</a>
+      <a href="#login" onclick="setTimeout(()=>{const s=document.getElementById('login-role'); if(s) s.value='Parent';},50)" class="btn btn-gold" style="justify-self:start;">Parent Sign In &rarr;</a>
     </div>
   </div>
 </section>
@@ -107,7 +107,7 @@
       <div class="eyebrow"><span class="star">★</span> SIGN IN</div>
       <h2>Portal login</h2>
     </div>
-    <form class="card" style="max-width:420px;" onsubmit="event.preventDefault(); alert('The live login system connects here once the database is set up. See the note below this form.');">
+    <form class="card" style="max-width:420px;" onsubmit="event.preventDefault(); const dest={Principal:'principal.html','Class Teacher':'teacher.html',Admin:'admin.html',Bursary:'bursary.html',Parent:'parent.html'}[document.getElementById('login-role').value]; window.location.href=dest;">
       <div style="display:grid; gap:18px;">
         <div>
           <label for="login-role">I am signing in as</label>

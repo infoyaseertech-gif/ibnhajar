@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Teacher Dashboard | Ibn Hajar Foundation-Zaria Portal</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="dash-shell">
+<aside class="dash-sidebar">
+  <a class="brand-mini" href="index.html">
+    <img src="logo.svg" alt="logo">
+    <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
+  </a>
+  <div class="dash-role-tag">Class Teacher &middot; Primary 4</div>
+  <nav class="dash-nav">
+      <a class="active" href="#class-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
+      <a class="" href="#attendance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg><span>Attendance</span></a>
+      <a class="" href="#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results Entry</span></a>
+  </nav>
+  <div class="exit">
+    <a href="portal.html">&larr; Switch role / Sign out</a><br>
+    <a href="index.html">&larr; Back to website</a>
+  </div>
+</aside>
+<main class="dash-main">
+<div class="dash-topbar">
+  <h1>My Class — Primary 4</h1>
+  <div class="dash-user">
+    <span>Class Teacher</span>
+    <div class="avatar">CT</div>
+  </div>
+</div>
+<div class="dash-content">
+
+<div class="demo-banner">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+  <div><strong>Demo preview</strong> &mdash; sample data shown. As a Class Teacher you only see and manage your own assigned class: <strong>Primary 4</strong> (example) &mdash; class list, attendance, and results entry.</div>
+</div>
+
+<div class="stat-cards">
+  <div class="stat-card-sm"><div class="num">Primary 4</div><div class="label">Your Assigned Class</div></div>
+  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Students in Class</div></div>
+  <div class="stat-card-sm"><div class="num">Term 1</div><div class="label">Current Term</div></div>
+  <div class="stat-card-sm"><div class="num">In progress</div><div class="label">Results Status</div></div>
+</div>
+
+<div class="panel" id="class-list">
+  <h3>Class List &mdash; Primary 4</h3>
+  <table class="dtable">
+    <thead><tr><th>Student</th><th>Gender</th><th>Guardian Contact</th></tr></thead>
+    <tbody>
+      <tr><td>[Student Name]</td><td>Male</td><td>0803 000 0000</td></tr>
+      <tr><td>[Student Name]</td><td>Female</td><td>0803 000 0001</td></tr>
+      <tr><td>[Student Name]</td><td>Male</td><td>0803 000 0002</td></tr>
+      <tr><td>[Student Name]</td><td>Female</td><td>0803 000 0003</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="dash-grid-2">
+  <div>
+    <div class="panel" id="attendance">
+      <h3>Mark Today's Attendance</h3>
+      <div class="attend-grid head"><span>Student</span><span>Present</span><span>Absent</span><span>Late</span></div>
+      <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a1" checked><input type="radio" name="a1"><input type="radio" name="a1"></div>
+      <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a2" checked><input type="radio" name="a2"><input type="radio" name="a2"></div>
+      <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a3" checked><input type="radio" name="a3"><input type="radio" name="a3"></div>
+      <button class="btn btn-navy" style="margin-top:16px;" onclick="alert('Demo only — attendance will save once connected.'); return false;">Save Attendance &rarr;</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel" id="results">
+      <h3>Enter / Update Result</h3>
+      <form onsubmit="event.preventDefault(); alert('Demo only — this result will be saved to the database once connected.');">
+        <div style="display:grid; gap:14px;">
+          <div>
+            <label for="t-student">Student</label>
+            <select id="t-student"><option>[Student Name]</option><option>[Student Name]</option></select>
+          </div>
+          <div>
+            <label for="t-subject">Subject</label>
+            <select id="t-subject"><option>Qur'an Memorization</option><option>Tajweed</option><option>Islamic Studies</option><option>Mathematics</option><option>English Language</option></select>
+          </div>
+          <div>
+            <label for="t-grade">Grade</label>
+            <select id="t-grade"><option>Excellent</option><option>Good</option><option>Fair</option></select>
+          </div>
+          <button type="submit" class="btn btn-gold">Save Result &rarr;</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+</main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
