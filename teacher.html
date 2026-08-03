@@ -7,6 +7,7 @@
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 <script src="auth.js"></script>
+<script src="records.js"></script>
 </head>
 <body>
 <div class="dash-shell">
@@ -49,15 +50,10 @@
 </div>
 
 <div class="panel" id="class-list">
-  <h3>Class List &mdash; Primary 4</h3>
+  <h3 id="class-list-title">Class List</h3>
   <table class="dtable">
-    <thead><tr><th>Student</th><th>Gender</th><th>Guardian Contact</th></tr></thead>
-    <tbody>
-      <tr><td>[Student Name]</td><td>Male</td><td>0803 000 0000</td></tr>
-      <tr><td>[Student Name]</td><td>Female</td><td>0803 000 0001</td></tr>
-      <tr><td>[Student Name]</td><td>Male</td><td>0803 000 0002</td></tr>
-      <tr><td>[Student Name]</td><td>Female</td><td>0803 000 0003</td></tr>
-    </tbody>
+    <thead><tr><th>Student</th><th>Class</th></tr></thead>
+    <tbody id="class-list-body"><tr><td colspan="2">Loading&hellip;</td></tr></tbody>
   </table>
 </div>
 
@@ -75,27 +71,124 @@
 
   <div>
     <div class="panel" id="results">
-      <h3>Enter / Update Result</h3>
-      <form onsubmit="event.preventDefault(); alert('Demo only — this result will be saved to the database once connected.');">
-        <div style="display:grid; gap:14px;">
-          <div>
-            <label for="t-student">Student</label>
-            <select id="t-student"><option>[Student Name]</option><option>[Student Name]</option></select>
-          </div>
-          <div>
-            <label for="t-subject">Subject</label>
-            <select id="t-subject"><option>Qur'an Memorization</option><option>Tajweed</option><option>Islamic Studies</option><option>Mathematics</option><option>English Language</option></select>
-          </div>
-          <div>
-            <label for="t-grade">Grade</label>
-            <select id="t-grade"><option>Excellent</option><option>Good</option><option>Fair</option></select>
-          </div>
-          <button type="submit" class="btn btn-gold">Save Result &rarr;</button>
+      <h3>Enter Results &mdash; Add Any Number of Subjects</h3>
+      <div class="form-grid" style="margin-bottom:18px;">
+        <div>
+          <label for="t-student">Student</label>
+          <select id="t-student"></select>
         </div>
-      </form>
+        <div>
+          <label for="t-session">Session</label>
+          <input id="t-session" value="2026/2027">
+        </div>
+        <div>
+          <label for="t-term">Term</label>
+          <select id="t-term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
+        </div>
+      </div>
+
+      <div id="subject-rows" style="display:grid; gap:10px; margin-bottom:12px;"></div>
+      <button type="button" id="add-subject-row" class="btn btn-outline" style="border-color:rgba(14,27,54,.25); color:var(--navy-mid);">+ Add Another Subject</button>
+
+      <div style="margin-top:20px;">
+        <button type="button" id="save-results-btn" class="btn btn-gold">Save Results &rarr;</button>
+      </div>
+      <p id="results-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+    </div>
+
+    <div class="panel" id="student-history">
+      <h3>Full Academic Record &mdash; Selected Student</h3>
+      <p class="form-note" style="margin-top:-8px;">Every term ever entered for this student, across sessions and classes.</p>
+      <table class="dtable">
+        <thead><tr><th>Session</th><th>Term</th><th>Class</th><th>Subject</th><th>Grade</th></tr></thead>
+        <tbody id="history-table-body"><tr><td colspan="5">Select a student above.</td></tr></tbody>
+      </table>
     </div>
   </div>
 </div>
+
+<script>
+let __subjectRowCount = 0;
+
+function addSubjectRow(subjectName, grade){
+  __subjectRowCount++;
+  const wrap = document.getElementById('subject-rows');
+  const row = document.createElement('div');
+  row.className = 'form-inline';
+  row.innerHTML = `
+    <div class="field"><label>Subject Name</label><input type="text" class="subj-name" placeholder="e.g. Tajweed, Mathematics, Hausa..." value="${subjectName || ''}"></div>
+    <div class="field"><label>Grade</label>
+      <select class="subj-grade">
+        <option ${grade==='Excellent'?'selected':''}>Excellent</option>
+        <option ${grade==='Good'?'selected':''}>Good</option>
+        <option ${grade==='Fair'?'selected':''}>Fair</option>
+      </select>
+    </div>
+    <button type="button" class="btn-xs btn-reject remove-row">Remove</button>`;
+  wrap.appendChild(row);
+  row.querySelector('.remove-row').addEventListener('click', () => row.remove());
+}
+
+function renderStudentHistory(studentId){
+  const body = document.getElementById('history-table-body');
+  if(!studentId){ body.innerHTML = '<tr><td colspan="5">Select a student above.</td></tr>'; return; }
+  const rows = getResultsForStudent(studentId);
+  if(!rows.length){ body.innerHTML = '<tr><td colspan="5">No results recorded yet for this student.</td></tr>'; return; }
+  body.innerHTML = rows.map(r => {
+    const pillClass = r.grade === 'Excellent' ? 'pill-excellent' : r.grade === 'Good' ? 'pill-good' : 'pill-fair';
+    return `<tr><td>${r.session}</td><td>${r.term}</td><td>${r.classAtTime}</td><td>${r.subject}</td><td><span class="pill ${pillClass}">${r.grade}</span></td></tr>`;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const me = getCurrentUser();
+  const studentSel = document.getElementById('t-student');
+  const myClass = me && me.assignedClass ? me.assignedClass : null;
+  const students = myClass ? getStudentsForClass(myClass) : getStudents();
+  studentSel.innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
+
+  const titleEl = document.getElementById('class-list-title');
+  if(titleEl) titleEl.textContent = 'Class List' + (myClass ? ' — ' + myClass : '');
+  const listBody = document.getElementById('class-list-body');
+  if(listBody){
+    listBody.innerHTML = students.length
+      ? students.map(s => `<tr><td>${s.name}</td><td>${s.class}</td></tr>`).join('')
+      : '<tr><td colspan="2">No students found for this class yet.</td></tr>';
+  }
+
+  addSubjectRow('', 'Excellent');
+  renderStudentHistory(studentSel.value);
+
+  studentSel.addEventListener('change', () => renderStudentHistory(studentSel.value));
+  document.getElementById('add-subject-row').addEventListener('click', () => addSubjectRow());
+
+  document.getElementById('save-results-btn').addEventListener('click', () => {
+    const student = students.find(s => s.id === studentSel.value);
+    if(!student){ return; }
+    const session = document.getElementById('t-session').value.trim() || CURRENT_SESSION;
+    const term = document.getElementById('t-term').value;
+    const rows = document.querySelectorAll('#subject-rows .form-inline');
+    let saved = 0;
+    rows.forEach(row => {
+      const name = row.querySelector('.subj-name').value.trim();
+      const grade = row.querySelector('.subj-grade').value;
+      if(name){
+        addResult({
+          studentId: student.id, studentName: student.name, classAtTime: student.class,
+          subject: name, grade, term, session, enteredBy: me ? me.name : 'Class Teacher'
+        });
+        saved++;
+      }
+    });
+    const status = document.getElementById('results-status');
+    status.hidden = false;
+    status.textContent = saved > 0
+      ? `Saved ${saved} subject result(s) for ${student.name} — ${term}, ${session}.`
+      : 'Enter at least one subject name before saving.';
+    if(saved > 0) renderStudentHistory(student.id);
+  });
+});
+</script>
 </div>
 </main>
 </div>

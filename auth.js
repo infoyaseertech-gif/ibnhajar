@@ -18,7 +18,7 @@ const DEFAULT_USERS = [
   { id:'u2', name:'School Admin', username:'admin', password:'Admin@123', role:'Admin', status:'active', mustChange:true },
   { id:'u3', name:'Bursary Officer', username:'bursary', password:'Bursary@123', role:'Bursary', status:'active', mustChange:true },
   { id:'u4', name:'Class Teacher — Primary 4', username:'teacher1', password:'Teacher@123', role:'Class Teacher', status:'active', assignedClass:'Primary 4', mustChange:true },
-  { id:'u5', name:'Parent of [Student Name]', username:'parent1', password:'Parent@123', role:'Parent', status:'active', childName:'[Student Name]', mustChange:true }
+  { id:'u5', name:'Parent of Amina Yusuf Ibrahim', username:'parent1', password:'Parent@123', role:'Parent', status:'active', childName:'Amina Yusuf Ibrahim', childId:'st1', mustChange:true }
 ];
 
 function seedUsers(){

@@ -7,6 +7,7 @@
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 <script src="auth.js"></script>
+<script src="records.js"></script>
 </head>
 <body>
 <div class="dash-shell">
@@ -120,6 +121,16 @@
       </table>
     </div>
 
+    <div class="panel" id="student-lookup">
+      <h3>Student Record Lookup</h3>
+      <p class="form-note" style="margin-top:-8px;">Pull any student's complete academic history, from their very first term to their most recent — across every class and session.</p>
+      <select id="lookup-student" style="margin-bottom:14px;"></select>
+      <table class="dtable">
+        <thead><tr><th>Session</th><th>Term</th><th>Class</th><th>Subject</th><th>Grade</th></tr></thead>
+        <tbody id="lookup-history-body"><tr><td colspan="5">Select a student.</td></tr></tbody>
+      </table>
+    </div>
+
     <div class="panel" id="announcements">
       <h3>Post an Announcement</h3>
       <form onsubmit="event.preventDefault(); alert('Demo only — this will publish to the website and notify parents once connected.');">
@@ -214,6 +225,20 @@ function renderUsersTable(){
 }
 document.addEventListener('DOMContentLoaded', () => {
   renderUsersTable();
+  const lookupSel = document.getElementById('lookup-student');
+  if(lookupSel){
+    lookupSel.innerHTML = getStudents().map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
+    function renderLookup(){
+      const body = document.getElementById('lookup-history-body');
+      const rows = getResultsForStudent(lookupSel.value);
+      body.innerHTML = rows.length ? rows.map(r => {
+        const pillClass = r.grade === 'Excellent' ? 'pill-excellent' : r.grade === 'Good' ? 'pill-good' : 'pill-fair';
+        return `<tr><td>${r.session}</td><td>${r.term}</td><td>${r.classAtTime}</td><td>${r.subject}</td><td><span class="pill ${pillClass}">${r.grade}</span></td></tr>`;
+      }).join('') : '<tr><td colspan="5">No results recorded yet.</td></tr>';
+    }
+    lookupSel.addEventListener('change', renderLookup);
+    renderLookup();
+  }
   const form = document.getElementById('create-user-form');
   if(form){
     form.addEventListener('submit', (e) => {

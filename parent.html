@@ -7,6 +7,7 @@
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 <script src="auth.js"></script>
+<script src="records.js"></script>
 </head>
 <body>
 <div class="dash-shell">
@@ -42,27 +43,22 @@
 </div>
 
 <div class="child-card">
-  <div class="ph">AI</div>
+  <div class="ph" id="child-initials">&hellip;</div>
   <div>
     <div style="font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); font-weight:700;">Your Child</div>
-    <h3 style="margin:2px 0 2px;">[Student Name]</h3>
-    <p style="margin:0; font-size:.88rem;">Primary 4 &middot; 2026/2027 Session</p>
+    <h3 style="margin:2px 0 2px;" id="child-name">&hellip;</h3>
+    <p style="margin:0; font-size:.88rem;" id="child-class">&nbsp;</p>
   </div>
 </div>
 
 <div class="dash-grid-2">
   <div>
     <div class="panel" id="results">
-      <h3>Academic Results &mdash; Term 1</h3>
+      <h3>Academic Record &mdash; Full History</h3>
+      <p class="form-note" style="margin-top:-8px;">Every term recorded for your child, oldest to newest.</p>
       <table class="dtable">
-        <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
-        <tbody>
-          <tr><td>Qur'an Memorization</td><td><span class="pill pill-excellent">Excellent</span></td></tr>
-          <tr><td>Tajweed</td><td><span class="pill pill-excellent">Excellent</span></td></tr>
-          <tr><td>Islamic Studies</td><td><span class="pill pill-good">Good</span></td></tr>
-          <tr><td>Mathematics</td><td><span class="pill pill-good">Good</span></td></tr>
-          <tr><td>English Language</td><td><span class="pill pill-fair">Fair</span></td></tr>
-        </tbody>
+        <thead><tr><th>Session</th><th>Term</th><th>Class</th><th>Subject</th><th>Grade</th></tr></thead>
+        <tbody id="parent-history-body"><tr><td colspan="5">Loading&hellip;</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -80,9 +76,28 @@
           <tr><td>Uniform</td><td><span class="pill pill-owing">Owing</span></td></tr>
         </tbody>
       </table>
+      <p class="form-note" style="margin-top:12px;">Fee balances will reflect Bursary's live records once the database is connected.</p>
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const me = getCurrentUser();
+  if(!me) return;
+  const child = getStudents().find(s => s.id === me.childId) || { name: me.childName || 'Your Child', class: '' };
+  document.getElementById('child-name').textContent = child.name;
+  document.getElementById('child-class').textContent = child.class ? (child.class + ' · ' + CURRENT_SESSION) : CURRENT_SESSION;
+  document.getElementById('child-initials').textContent = initials(child.name);
+
+  const body = document.getElementById('parent-history-body');
+  const rows = child.id ? getResultsForStudent(child.id) : [];
+  body.innerHTML = rows.length ? rows.map(r => {
+    const pillClass = r.grade === 'Excellent' ? 'pill-excellent' : r.grade === 'Good' ? 'pill-good' : 'pill-fair';
+    return `<tr><td>${r.session}</td><td>${r.term}</td><td>${r.classAtTime}</td><td>${r.subject}</td><td><span class="pill ${pillClass}">${r.grade}</span></td></tr>`;
+  }).join('') : '<tr><td colspan="5">No results recorded yet.</td></tr>';
+});
+</script>
 </div>
 </main>
 </div>
