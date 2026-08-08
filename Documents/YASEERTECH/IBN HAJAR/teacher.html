@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Teacher Dashboard | Ibn Hajar Foundation-Zaria Portal</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script src="auth.js"></script>
+<script src="records.js"></script>
+</head>
+<body>
+<div class="dash-shell">
+<aside class="dash-sidebar">
+  <a class="brand-mini" href="index.html">
+    <img src="logo.svg" alt="logo">
+    <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
+  </a>
+  <div class="dash-role-tag" data-user-role>Class Teacher</div>
+  <nav class="dash-nav">
+      <a class="active" href="#class-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
+      <a class="" href="#attendance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg><span>Attendance</span></a>
+      <a class="" href="#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results Entry</span></a>
+  </nav>
+  <div class="exit">
+    <a href="account.html">Change password</a><br>
+    <a href="javascript:void(0)" onclick="logout()">&larr; Sign out</a>
+  </div>
+</aside>
+<main class="dash-main">
+<div class="dash-topbar">
+  <h1>My Class</h1>
+  <div class="dash-user">
+    <span data-user-name>&hellip;</span>
+    <div class="avatar" data-user-avatar>&middot;</div>
+  </div>
+</div>
+<div class="dash-content">
+
+<div class="demo-banner">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+  <div><strong>Demo preview</strong> &mdash; sample data shown. As a Class Teacher you only see and manage your own assigned class: <strong>Primary 4</strong> (example) &mdash; class list, attendance, and results entry.</div>
+</div>
+
+<div class="stat-cards">
+  <div class="stat-card-sm"><div class="num">Primary 4</div><div class="label">Your Assigned Class</div></div>
+  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Students in Class</div></div>
+  <div class="stat-card-sm"><div class="num">Term 1</div><div class="label">Current Term</div></div>
+  <div class="stat-card-sm"><div class="num">In progress</div><div class="label">Results Status</div></div>
+</div>
+
+<div class="panel" id="class-list">
+  <h3 id="class-list-title">Class List</h3>
+  <table class="dtable">
+    <thead><tr><th>Student</th><th>Class</th></tr></thead>
+    <tbody id="class-list-body"><tr><td colspan="2">Loading&hellip;</td></tr></tbody>
+  </table>
+</div>
+
+<div class="dash-grid-2">
+  <div>
+    <div class="panel" id="attendance">
+      <h3>Mark Today's Attendance</h3>
+      <div class="attend-grid head"><span>Student</span><span>Present</span><span>Absent</span><span>Late</span></div>
+      <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a1" checked><input type="radio" name="a1"><input type="radio" name="a1"></div>
+      <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a2" checked><input type="radio" name="a2"><input type="radio" name="a2"></div>
+      <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a3" checked><input type="radio" name="a3"><input type="radio" name="a3"></div>
+      <button class="btn btn-navy" style="margin-top:16px;" onclick="alert('Demo only — attendance will save once connected.'); return false;">Save Attendance &rarr;</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel" id="results">
+      <h3>Enter Results &mdash; Add Any Number of Subjects</h3>
+      <div class="form-grid" style="margin-bottom:18px;">
+        <div>
+          <label for="t-student">Student</label>
+          <select id="t-student"></select>
+        </div>
+        <div>
+          <label for="t-session">Session</label>
+          <input id="t-session" value="2026/2027">
+        </div>
+        <div>
+          <label for="t-term">Term</label>
+          <select id="t-term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
+        </div>
+      </div>
+
+      <div id="subject-rows" style="display:grid; gap:10px; margin-bottom:12px;"></div>
+      <button type="button" id="add-subject-row" class="btn btn-outline" style="border-color:rgba(14,27,54,.25); color:var(--navy-mid);">+ Add Another Subject</button>
+
+      <div style="margin-top:20px;">
+        <button type="button" id="save-results-btn" class="btn btn-gold">Save Results &rarr;</button>
+      </div>
+      <p id="results-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+    </div>
+
+    <div class="panel" id="student-history">
+      <h3>Full Academic Record &mdash; Selected Student</h3>
+      <p class="form-note" style="margin-top:-8px;">Every term ever entered for this student, across sessions and classes.</p>
+      <table class="dtable">
+        <thead><tr><th>Session</th><th>Term</th><th>Class</th><th>Subject</th><th>Grade</th></tr></thead>
+        <tbody id="history-table-body"><tr><td colspan="5">Select a student above.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+let __subjectRowCount = 0;
+
+function addSubjectRow(subjectName, grade){
+  __subjectRowCount++;
+  const wrap = document.getElementById('subject-rows');
+  const row = document.createElement('div');
+  row.className = 'form-inline';
+  row.innerHTML = `
+    <div class="field"><label>Subject Name</label><input type="text" class="subj-name" placeholder="e.g. Tajweed, Mathematics, Hausa..." value="${subjectName || ''}"></div>
+    <div class="field"><label>Grade</label>
+      <select class="subj-grade">
+        <option ${grade==='Excellent'?'selected':''}>Excellent</option>
+        <option ${grade==='Good'?'selected':''}>Good</option>
+        <option ${grade==='Fair'?'selected':''}>Fair</option>
+      </select>
+    </div>
+    <button type="button" class="btn-xs btn-reject remove-row">Remove</button>`;
+  wrap.appendChild(row);
+  row.querySelector('.remove-row').addEventListener('click', () => row.remove());
+}
+
+function renderStudentHistory(studentId){
+  const body = document.getElementById('history-table-body');
+  if(!studentId){ body.innerHTML = '<tr><td colspan="5">Select a student above.</td></tr>'; return; }
+  const rows = getResultsForStudent(studentId);
+  if(!rows.length){ body.innerHTML = '<tr><td colspan="5">No results recorded yet for this student.</td></tr>'; return; }
+  body.innerHTML = rows.map(r => {
+    const pillClass = r.grade === 'Excellent' ? 'pill-excellent' : r.grade === 'Good' ? 'pill-good' : 'pill-fair';
+    return `<tr><td>${r.session}</td><td>${r.term}</td><td>${r.classAtTime}</td><td>${r.subject}</td><td><span class="pill ${pillClass}">${r.grade}</span></td></tr>`;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const me = getCurrentUser();
+  const studentSel = document.getElementById('t-student');
+  const myClass = me && me.assignedClass ? me.assignedClass : null;
+  const students = myClass ? getStudentsForClass(myClass) : getStudents();
+  studentSel.innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
+
+  const titleEl = document.getElementById('class-list-title');
+  if(titleEl) titleEl.textContent = 'Class List' + (myClass ? ' — ' + myClass : '');
+  const listBody = document.getElementById('class-list-body');
+  if(listBody){
+    listBody.innerHTML = students.length
+      ? students.map(s => `<tr><td>${s.name}</td><td>${s.class}</td></tr>`).join('')
+      : '<tr><td colspan="2">No students found for this class yet.</td></tr>';
+  }
+
+  addSubjectRow('', 'Excellent');
+  renderStudentHistory(studentSel.value);
+
+  studentSel.addEventListener('change', () => renderStudentHistory(studentSel.value));
+  document.getElementById('add-subject-row').addEventListener('click', () => addSubjectRow());
+
+  document.getElementById('save-results-btn').addEventListener('click', () => {
+    const student = students.find(s => s.id === studentSel.value);
+    if(!student){ return; }
+    const session = document.getElementById('t-session').value.trim() || CURRENT_SESSION;
+    const term = document.getElementById('t-term').value;
+    const rows = document.querySelectorAll('#subject-rows .form-inline');
+    let saved = 0;
+    rows.forEach(row => {
+      const name = row.querySelector('.subj-name').value.trim();
+      const grade = row.querySelector('.subj-grade').value;
+      if(name){
+        addResult({
+          studentId: student.id, studentName: student.name, classAtTime: student.class,
+          subject: name, grade, term, session, enteredBy: me ? me.name : 'Class Teacher'
+        });
+        saved++;
+      }
+    });
+    const status = document.getElementById('results-status');
+    status.hidden = false;
+    status.textContent = saved > 0
+      ? `Saved ${saved} subject result(s) for ${student.name} — ${term}, ${session}.`
+      : 'Enter at least one subject name before saving.';
+    if(saved > 0) renderStudentHistory(student.id);
+  });
+});
+</script>
+</div>
+</main>
+</div>
+<script src="script.js"></script>
+<script>
+  const __user = requireRole(['Class Teacher']);
+  if (__user) paintUser(__user);
+</script>
+</body>
+</html>
