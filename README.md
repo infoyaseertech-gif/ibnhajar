@@ -1,44 +1,44 @@
-# Ibn Hajar Foundation-Zaria — Real, working portal (client-demo build)
+# Ibn Hajar Foundation-Zaria — Redesigned Login & Application Flow
 
-Flat file structure — upload/overwrite to your GitHub repo as usual.
+## What changed this round
 
-## What changed in this round
+**portal.html — fully redesigned.**
+- The 4 role-cards grid is gone. One clean, professional sign-in card instead.
+- "Forgot your password?" now works: parents can self-service reset (re-verify with
+  their child's name + admission number); staff are told to contact the Principal
+  (the Principal can reset any staff password from Manage Users, as before).
+- Parent registration is now built into this page as a tab: "Parent — Register".
+  A parent creates their own login by entering the student's full name, class, and
+  admission number — it's checked against real student records before the account
+  is created, so only someone who actually has that information can register.
 
-1. **Recent Admission Applications is now fully editable.** Approve, reject, or
-   permanently remove any application, on both the Principal and Admin dashboards.
-   These share the same data, so an action on one shows up on the other.
+**"Apply Now" removed from the nav** on every page, as requested. The "Apply today"
+link inside the top banner (Principal-editable) is what remains, and it now goes
+straight to the new application flow.
 
-2. **The public admission form now actually creates an application.** Fill it in on
-   admissions.html, submit, and it appears immediately in Principal's and Admin's
-   "Admission Applications" list as Pending.
+**apply.html — a brand new, separate page for applications.**
+- Nobody can fill in a child's details without an account first. This page opens with
+  Sign In / Create Account tabs; only after creating an account (or signing back in)
+  does the actual admission form appear.
+- Once submitted, the applicant can see their own application(s) and current status
+  (Pending/Approved/Rejected) right there on the same page.
+- admissions.html no longer has an open public form — it now explains the process and
+  ends with a "Start Your Application" button that leads to apply.html.
 
-3. **Announcements/News can be posted and removed.** Principal and Admin can each post,
-   and each can delete any announcement (including ones the other posted) — they publish
-   live to news.html and the homepage.
-
-4. **Principal controls what each account can see.** When creating a new Admin, Bursary,
-   or Class Teacher account, Principal checks off exactly which sections that person
-   should have (e.g. an Admin without "Manage admission applications" checked simply
-   won't see that panel when they log in). Existing accounts can have their access
-   changed anytime via the "Access" button in Manage Users.
-
-5. **Parent login is fully scoped to one child.** Results, fee balance, and payment
-   breakdown — only ever their own linked student, nothing about anyone else.
-
-6. **Removed the "Demo preview" banners** from every dashboard.
-
-7. **The top "Admission Now Open" banner is now Principal-controlled.** On the
-   Principal dashboard, "Homepage Announcement Banner" lets you edit the text shown
-   at the top of every public page, or remove it entirely (e.g. once admissions close).
-   Leaving it empty hides the strip completely.
+## Try it
+1. Go to apply.html → Create Account → fill in the admission form → submit.
+2. Sign in as Principal (or Admin) on portal.html → the application appears in
+   "Admission Applications" → Approve/Reject/Remove it.
+3. Go to portal.html → Parent — Register tab → use one of the seeded students to test:
+   - Amina Yusuf Ibrahim, Primary 4, admission number IHF/2024/001
+   - Abdulrahman Musa, JSS 1, admission number IHF/2023/014
+   - Khadija Sani, Primary 5, admission number IHF/2024/027
 
 ## Still local-only (until Supabase is connected)
-Everything above genuinely works, but the data lives in this browser's local storage,
-not a shared server — so it only persists on the device you're using, and a different
-visitor won't see accounts/applications/announcements you created. supabase-schema.sql
-has the full real database design ready to install whenever you want this made
-permanent and shared across every device — send the Supabase project URL + anon key
-and I'll wire it in without changing how anything looks or works.
+All of the above genuinely works, but lives in this browser's local storage — it
+won't be visible to a different visitor until the real database is connected.
+supabase-schema.sql has the full design ready; send the Supabase project URL + anon
+key whenever you're ready and this becomes permanent and shared everywhere.
 
 ## Deploy
 Upload all files here to your GitHub repo (overwrite existing) — Vercel/Netlify

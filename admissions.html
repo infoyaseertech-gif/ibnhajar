@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
       <a class="" href="gallery.html">Gallery</a>
       <a class="" href="contact.html">Contact</a>
       <a class="nav-portal" href="portal.html">Staff &amp; Parent Login</a>
-      <a class="nav-cta" href="admissions.html">Apply Now</a>
     </nav>
     <button class="nav-toggle" aria-label="Toggle menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -160,95 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </section>
 
+
 <section class="bg-navy" id="apply">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow" style="color:var(--gold-soft);"><span class="star">★</span> ONLINE APPLICATION</div>
-      <h2>Admission Form &mdash; 2026/2027 Session</h2>
-      <p>Complete every field below. Your application is sent directly to our admissions office for review.</p>
-    </div>
-
-    <form id="admission-form" class="card" style="background:#fff;">
-      <fieldset>
-        <legend>Student Information</legend>
-        <div class="form-grid">
-          <div>
-            <label for="s-name">Student's Full Name</label>
-            <input id="s-name" name="student_name" type="text" required placeholder="e.g. Amina Yusuf Ibrahim">
-          </div>
-          <div>
-            <label for="s-dob">Date of Birth</label>
-            <input id="s-dob" name="student_dob" type="date" required>
-          </div>
-          <div>
-            <label for="s-gender">Gender</label>
-            <select id="s-gender" name="student_gender" required>
-              <option value="">Select</option>
-              <option>Male</option>
-              <option>Female</option>
-            </select>
-          </div>
-          <div>
-            <label for="s-class">Class Applying For</label>
-            <select id="s-class" name="class_applying" required>
-              <option value="">Select</option>
-              <optgroup label="Primary School">
-                <option>Primary 1</option><option>Primary 2</option><option>Primary 3</option>
-                <option>Primary 4</option><option>Primary 5</option><option>Primary 6</option>
-              </optgroup>
-              <optgroup label="Junior Secondary School">
-                <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
-              </optgroup>
-            </select>
-          </div>
-          <div class="full">
-            <label for="s-prev">Previous School Attended (if any)</label>
-            <input id="s-prev" name="previous_school" type="text" placeholder="Leave blank if none">
-          </div>
-          <div class="full">
-            <label for="s-photo">Passport Photograph</label>
-            <div class="file-drop">
-              <input id="s-photo" name="passport_photo" type="file" accept="image/*" required style="border:none; background:none; padding:0;">
-              <p style="margin:8px 0 0; font-size:.78rem;">Upload a recent passport photograph (JPG or PNG).</p>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset style="margin-top:34px;">
-        <legend>Parent / Guardian Information</legend>
-        <div class="form-grid">
-          <div>
-            <label for="p-name">Parent/Guardian Full Name</label>
-            <input id="p-name" name="guardian_name" type="text" required>
-          </div>
-          <div>
-            <label for="p-phone">Phone Number</label>
-            <input id="p-phone" name="guardian_phone" type="tel" required placeholder="e.g. 0803 000 0000">
-          </div>
-          <div>
-            <label for="p-email">Email Address</label>
-            <input id="p-email" name="guardian_email" type="email" required>
-          </div>
-          <div>
-            <label for="p-relation">Relationship to Student</label>
-            <select id="p-relation" name="guardian_relation">
-              <option>Parent</option><option>Guardian</option><option>Other</option>
-            </select>
-          </div>
-          <div class="full">
-            <label for="p-address">Home Address</label>
-            <textarea id="p-address" name="guardian_address" rows="3" required></textarea>
-          </div>
-        </div>
-      </fieldset>
-
-      <div style="margin-top:30px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
-        <p class="form-note" style="margin:0;">By submitting, you confirm the information above is accurate to the best of your knowledge.</p>
-        <button type="submit" class="btn btn-gold">Submit Application &rarr;</button>
-      </div>
-      <p id="admission-status" role="status" hidden style="margin-top:18px; padding:14px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.9rem; color:var(--navy-deep);"></p>
-    </form>
+  <div class="wrap" style="text-align:center;">
+    <div class="badge">Online Application &mdash; 2026/2027 Session</div>
+    <h2 style="margin-top:14px;">Ready to apply?</h2>
+    <p style="max-width:56ch; margin:0 auto 26px;">Applications are submitted through a secure applicant account, so you can save your progress and track your application's status at any time. Create an account (or sign back in) to begin.</p>
+    <a href="apply.html" class="btn btn-gold">Start Your Application &rarr;</a>
   </div>
 </section>
 <footer class="site">

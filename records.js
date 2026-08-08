@@ -9,9 +9,9 @@ const CURRENT_SESSION = '2026/2027';
 const TERMS = ['Term 1', 'Term 2', 'Term 3'];
 
 const DEMO_STUDENTS = [
-  { id:'st1', name:'Amina Yusuf Ibrahim', class:'Primary 4' },
-  { id:'st2', name:'Abdulrahman Musa', class:'JSS 1' },
-  { id:'st3', name:'Khadija Sani', class:'Primary 5' }
+  { id:'st1', name:'Amina Yusuf Ibrahim', class:'Primary 4', admissionNumber:'IHF/2024/001' },
+  { id:'st2', name:'Abdulrahman Musa', class:'JSS 1', admissionNumber:'IHF/2023/014' },
+  { id:'st3', name:'Khadija Sani', class:'Primary 5', admissionNumber:'IHF/2024/027' }
 ];
 
 // A couple of seeded historic results, so you can immediately see accumulation
@@ -35,8 +35,24 @@ function getResults(){
 }
 function saveResultsList(list){ localStorage.setItem('ihf_results', JSON.stringify(list)); }
 
-function getStudents(){ return DEMO_STUDENTS; }
-function getStudentsForClass(className){ return DEMO_STUDENTS.filter(s => s.class === className); }
+function seedStudents(){
+  if(!localStorage.getItem('ihf_students')){
+    localStorage.setItem('ihf_students', JSON.stringify(
+      DEMO_STUDENTS.map(s => ({ ...s, admissionNumber: 'IHF/2025/' + String(1000 + Math.floor(Math.random()*100)) }))
+    ));
+  }
+}
+function getStudents(){
+  seedStudents();
+  try { return JSON.parse(localStorage.getItem('ihf_students')) || []; }
+  catch(e){ return []; }
+}
+function addEnrolledStudent(student){
+  const list = getStudents();
+  list.push(student);
+  localStorage.setItem('ihf_students', JSON.stringify(list));
+}
+function getStudentsForClass(className){ return getStudents().filter(s => s.class === className); }
 
 // Adds or updates one subject's result for a student/term/session (re-saving the
 // same student+subject+term+session updates the existing entry rather than duplicating).
@@ -103,7 +119,7 @@ function removeAnnouncement(id){
 // SITE-WIDE TOP BANNER — Principal controls the "Admission Now Open" strip
 // shown across every public page. Empty = hidden.
 // =========================================================================
-const DEFAULT_BANNER = "<strong>Admission Now Open — 2026/2027 Session.</strong> Enrol your child in our Qur'an memorization &amp; academic boarding programme. <a href=\"admissions.html\">Apply today &rarr;</a>";
+const DEFAULT_BANNER = "<strong>Admission Now Open — 2026/2027 Session.</strong> Enrol your child in our Qur'an memorization &amp; academic boarding programme. <a href=\"apply.html\">Apply today &rarr;</a>";
 function getSiteBanner(){
   const v = localStorage.getItem('ihf_banner');
   return v === null ? DEFAULT_BANNER : v;
@@ -141,10 +157,36 @@ function addApplication(data){
   });
   localStorage.setItem('ihf_applications', JSON.stringify(list));
 }
+function nextAdmissionNumber(){
+  const year = CURRENT_SESSION.split('/')[0];
+  const seq = getStudents().length + 1;
+  return 'IHF/' + year + '/' + String(seq).padStart(4, '0');
+}
+function admitStudentFromApplication(application){
+  const admissionNumber = nextAdmissionNumber();
+  addEnrolledStudent({
+    id: 'st' + Date.now(),
+    name: application.studentName,
+    class: application.classApplyingFor || 'Unassigned',
+    admissionNumber
+  });
+  return admissionNumber;
+}
 function setApplicationStatus(id, status){
   const list = getApplications();
   const a = list.find(x => x.id === id);
-  if(a){ a.status = status; localStorage.setItem('ihf_applications', JSON.stringify(list)); }
+  if(!a) return null;
+  a.status = status;
+  let admissionNumber = a.admissionNumber;
+  if(status === 'approved' && !a.admissionNumber){
+    admissionNumber = admitStudentFromApplication(a);
+    a.admissionNumber = admissionNumber;
+  }
+  localStorage.setItem('ihf_applications', JSON.stringify(list));
+  return admissionNumber;
+}
+function getApplicationsForUser(applicantUserId){
+  return getApplications().filter(a => a.applicantUserId === applicantUserId);
 }
 function removeApplication(id){
   const list = getApplications().filter(a => a.id !== id);
