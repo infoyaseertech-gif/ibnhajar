@@ -65,18 +65,13 @@
 
   <div>
     <div class="panel" id="fees">
-      <h3>Fee Status</h3>
-      <div class="progress-row"><div class="top"><span>Paid so far</span><span>&#8358;[ ] of &#8358;[ ]</span></div><div class="progress-bar"><div class="fill" style="width:68%"></div></div></div>
+      <h3>Fee Status &mdash; Term 1, 2026/2027</h3>
+      <div class="progress-row"><div class="top"><span>Paid so far</span><span id="fee-paid-label">&hellip;</span></div><div class="progress-bar"><div class="fill" id="fee-paid-bar" style="width:0%"></div></div></div>
       <table class="dtable" style="margin-top:14px;">
         <thead><tr><th>Fee Type</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>Tuition</td><td><span class="pill pill-paid">Paid</span></td></tr>
-          <tr><td>Hostel</td><td><span class="pill pill-paid">Paid</span></td></tr>
-          <tr><td>Feeding</td><td><span class="pill pill-partial">Partial</span></td></tr>
-          <tr><td>Uniform</td><td><span class="pill pill-owing">Owing</span></td></tr>
-        </tbody>
+        <tbody id="parent-fees-body"><tr><td colspan="2">Loading&hellip;</td></tr></tbody>
       </table>
-      <p class="form-note" style="margin-top:12px;">Fee balances will reflect Bursary's live records once the database is connected.</p>
+      <p class="form-note" style="margin-top:12px;">Sample fee amounts shown &mdash; the school will confirm real figures for your child's class.</p>
     </div>
   </div>
 </div>
@@ -96,6 +91,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const pillClass = r.grade === 'Excellent' ? 'pill-excellent' : r.grade === 'Good' ? 'pill-good' : 'pill-fair';
     return `<tr><td>${r.session}</td><td>${r.term}</td><td>${r.classAtTime}</td><td>${r.subject}</td><td><span class="pill ${pillClass}">${r.grade}</span></td></tr>`;
   }).join('') : '<tr><td colspan="5">No results recorded yet.</td></tr>';
+
+  if(child.id){
+    const term = 'Term 1', session = CURRENT_SESSION;
+    const paid = getTotalPaid(child.id, term, session);
+    const pct = Math.min(100, Math.round((paid / FEE_TOTAL_PER_TERM) * 100));
+    document.getElementById('fee-paid-label').textContent = formatNaira(paid) + ' of ' + formatNaira(FEE_TOTAL_PER_TERM);
+    document.getElementById('fee-paid-bar').style.width = pct + '%';
+    const paidTypes = {};
+    getPaymentsForStudent(child.id, term, session).forEach(p => { paidTypes[p.feeType] = (paidTypes[p.feeType]||0) + p.amount; });
+    const feesBody = document.getElementById('parent-fees-body');
+    feesBody.innerHTML = Object.keys(FEE_TYPE_AMOUNTS).map(type => {
+      const amountPaid = paidTypes[type] || 0;
+      const full = FEE_TYPE_AMOUNTS[type];
+      const status = amountPaid >= full ? 'Paid' : amountPaid > 0 ? 'Partial' : 'Owing';
+      const pillClass = status === 'Paid' ? 'pill-paid' : status === 'Partial' ? 'pill-partial' : 'pill-owing';
+      return `<tr><td>${type}</td><td><span class="pill ${pillClass}">${status}</span></td></tr>`;
+    }).join('');
+  }
 });
 </script>
 </div>

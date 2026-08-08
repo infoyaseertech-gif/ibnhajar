@@ -70,3 +70,75 @@ function getResultsForStudent(studentId){
 function getResultsForClassTerm(className, term, session){
   return getResults().filter(r => r.classAtTime === className && r.term === term && r.session === session);
 }
+
+// =========================================================================
+// ANNOUNCEMENTS — posting from Admin/Principal dashboards now actually
+// publishes to the public News & Announcements page.
+// =========================================================================
+const DEMO_ANNOUNCEMENTS = [
+  { id:'a1', message:"Admission is now open for the 2026/2027 session. Apply online via the Admissions page.", postedBy:'Admin', date:'2026-07-20' },
+  { id:'a2', message:"Term 1 resumes for all boarding students on the second week of September. Please ensure fees and hostel requirements are settled before resumption.", postedBy:'Principal', date:'2026-08-01' }
+];
+function seedAnnouncements(){
+  if(!localStorage.getItem('ihf_announcements')){
+    localStorage.setItem('ihf_announcements', JSON.stringify(DEMO_ANNOUNCEMENTS));
+  }
+}
+function getAnnouncements(){
+  seedAnnouncements();
+  try { return JSON.parse(localStorage.getItem('ihf_announcements')).sort((a,b)=> b.date.localeCompare(a.date)); }
+  catch(e){ return []; }
+}
+function addAnnouncement(message, postedBy){
+  const list = getAnnouncements();
+  list.unshift({ id:'a'+Date.now(), message, postedBy, date: new Date().toISOString().slice(0,10) });
+  localStorage.setItem('ihf_announcements', JSON.stringify(list));
+}
+
+// =========================================================================
+// FEES — sample per-term amounts (replace with real figures from the school).
+// Recording a payment from Bursary actually updates balances everywhere.
+// =========================================================================
+const FEE_TYPE_AMOUNTS = {
+  'Tuition': 60000, 'Security': 5000, 'Hostel': 40000, 'Hygiene': 3000,
+  'Feeding': 35000, 'Textbooks': 10000, 'Uniform': 12000
+};
+const FEE_TOTAL_PER_TERM = Object.values(FEE_TYPE_AMOUNTS).reduce((a,b)=>a+b,0);
+
+function seedPayments(){
+  if(!localStorage.getItem('ihf_payments')){
+    localStorage.setItem('ihf_payments', JSON.stringify([
+      { id:'p1', studentId:'st1', studentName:'Amina Yusuf Ibrahim', feeType:'Tuition', amount:60000, term:'Term 1', session:'2026/2027', date:'2026-09-05', recordedBy:'Bursary' },
+      { id:'p2', studentId:'st1', studentName:'Amina Yusuf Ibrahim', feeType:'Hostel', amount:40000, term:'Term 1', session:'2026/2027', date:'2026-09-05', recordedBy:'Bursary' },
+      { id:'p3', studentId:'st2', studentName:'Abdulrahman Musa', feeType:'Tuition', amount:30000, term:'Term 1', session:'2026/2027', date:'2026-09-10', recordedBy:'Bursary' }
+    ]));
+  }
+}
+function getPayments(){
+  seedPayments();
+  try { return JSON.parse(localStorage.getItem('ihf_payments')) || []; }
+  catch(e){ return []; }
+}
+function recordPayment({ studentId, studentName, feeType, amount, term, session, recordedBy }){
+  const list = getPayments();
+  list.push({ id:'p'+Date.now(), studentId, studentName, feeType, amount:Number(amount), term, session, date:new Date().toISOString().slice(0,10), recordedBy });
+  localStorage.setItem('ihf_payments', JSON.stringify(list));
+}
+function getPaymentsForStudent(studentId, term, session){
+  return getPayments().filter(p => p.studentId === studentId && (!term || p.term === term) && (!session || p.session === session));
+}
+function getTotalPaid(studentId, term, session){
+  return getPaymentsForStudent(studentId, term, session).reduce((sum,p)=> sum + p.amount, 0);
+}
+function getBalance(studentId, term, session){
+  return Math.max(0, FEE_TOTAL_PER_TERM - getTotalPaid(studentId, term, session));
+}
+function getPaymentStatus(studentId, term, session){
+  const paid = getTotalPaid(studentId, term, session);
+  if(paid <= 0) return 'owing';
+  if(paid >= FEE_TOTAL_PER_TERM) return 'paid';
+  return 'partial';
+}
+function formatNaira(n){
+  return '\u20a6' + Number(n).toLocaleString('en-NG');
+}

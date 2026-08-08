@@ -40,40 +40,37 @@
 
 <div class="demo-banner">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
-  <div><strong>Demo preview</strong> &mdash; sample data shown. As Bursary you record fee payments, track outstanding balances per student, and generate fee reports.</div>
+  <div><strong>Demo preview</strong> &mdash; this actually records and calculates in real time (stored in this browser for now). Fee amounts shown are sample figures &mdash; send the real ones and I'll update them.</div>
 </div>
 
-<div class="stat-cards">
-  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Collected This Term</div></div>
-  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Outstanding Balance</div></div>
-  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Students Fully Paid</div></div>
-  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Students Owing</div></div>
+<div class="stat-cards" id="fee-stats">
+  <div class="stat-card-sm"><div class="num" id="stat-collected">&hellip;</div><div class="label">Collected This Term</div></div>
+  <div class="stat-card-sm"><div class="num" id="stat-outstanding">&hellip;</div><div class="label">Outstanding Balance</div></div>
+  <div class="stat-card-sm"><div class="num" id="stat-paid-count">&hellip;</div><div class="label">Students Fully Paid</div></div>
+  <div class="stat-card-sm"><div class="num" id="stat-owing-count">&hellip;</div><div class="label">Students Owing</div></div>
 </div>
 
 <div class="panel" id="record-payment">
   <h3>Record a Payment</h3>
-  <form class="form-inline" onsubmit="event.preventDefault(); alert('Demo only — payment will save once connected.');">
-    <div class="field"><label for="b-student">Student</label><select id="b-student"><option>[Student Name]</option><option>[Student Name]</option></select></div>
+  <form id="payment-form" class="form-inline">
+    <div class="field"><label for="b-student">Student</label><select id="b-student"></select></div>
     <div class="field"><label for="b-type">Fee Type</label>
       <select id="b-type"><option>Tuition</option><option>Security</option><option>Hostel</option><option>Hygiene</option><option>Feeding</option><option>Textbooks</option><option>Uniform</option></select>
     </div>
-    <div class="field"><label for="b-amount">Amount (&#8358;)</label><input id="b-amount" type="number" placeholder="0.00"></div>
-    <div class="field"><label for="b-date">Date</label><input id="b-date" type="date"></div>
+    <div class="field"><label for="b-amount">Amount (&#8358;)</label><input id="b-amount" type="number" placeholder="0.00" required></div>
+    <div class="field"><label for="b-term">Term</label><select id="b-term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select></div>
     <button type="submit" class="btn btn-gold">Record Payment &rarr;</button>
   </form>
+  <p id="payment-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
 </div>
 
 <div class="dash-grid-2">
   <div>
     <div class="panel" id="balances">
-      <h3>Outstanding Balances</h3>
+      <h3>Outstanding Balances &mdash; Term 1, 2026/2027</h3>
       <table class="dtable">
-        <thead><tr><th>Student</th><th>Class</th><th>Balance</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>[Student Name]</td><td>Primary 4</td><td>&#8358;[ ]</td><td><span class="pill pill-paid">Fully Paid</span></td></tr>
-          <tr><td>[Student Name]</td><td>JSS 1</td><td>&#8358;[ ]</td><td><span class="pill pill-partial">Partial</span></td></tr>
-          <tr><td>[Student Name]</td><td>Primary 2</td><td>&#8358;[ ]</td><td><span class="pill pill-owing">Owing</span></td></tr>
-        </tbody>
+        <thead><tr><th>Student</th><th>Class</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead>
+        <tbody id="balances-body"><tr><td colspan="5">Loading&hellip;</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -84,10 +81,56 @@
       <div class="progress-row"><div class="top"><span>Primary 1&ndash;3</span><span>72%</span></div><div class="progress-bar"><div class="fill" style="width:72%"></div></div></div>
       <div class="progress-row"><div class="top"><span>Primary 4&ndash;6</span><span>64%</span></div><div class="progress-bar"><div class="fill" style="width:64%"></div></div></div>
       <div class="progress-row"><div class="top"><span>JSS 1&ndash;3</span><span>58%</span></div><div class="progress-bar"><div class="fill" style="width:58%"></div></div></div>
-      <button class="btn btn-navy" style="margin-top:6px;" onclick="alert('Demo only — a downloadable report will generate once connected.'); return false;">Export Report &rarr;</button>
+      <button class="btn btn-navy" style="margin-top:6px;" onclick="alert('Demo only — a downloadable report will generate once Supabase is connected.'); return false;">Export Report &rarr;</button>
     </div>
   </div>
 </div>
+
+<script>
+function refreshBursary(){
+  const students = getStudents();
+  const term = 'Term 1', session = CURRENT_SESSION;
+  let collected = 0, outstanding = 0, paidCount = 0, owingCount = 0;
+  const rows = students.map(s => {
+    const paid = getTotalPaid(s.id, term, session);
+    const bal = getBalance(s.id, term, session);
+    const status = getPaymentStatus(s.id, term, session);
+    collected += paid; outstanding += bal;
+    if(status === 'paid') paidCount++;
+    if(status === 'owing') owingCount++;
+    const pillClass = status === 'paid' ? 'pill-paid' : status === 'partial' ? 'pill-partial' : 'pill-owing';
+    const label = status === 'paid' ? 'Fully Paid' : status === 'partial' ? 'Partial' : 'Owing';
+    return `<tr><td>${s.name}</td><td>${s.class}</td><td>${formatNaira(paid)}</td><td>${formatNaira(bal)}</td><td><span class="pill ${pillClass}">${label}</span></td></tr>`;
+  });
+  document.getElementById('balances-body').innerHTML = rows.join('');
+  document.getElementById('stat-collected').textContent = formatNaira(collected);
+  document.getElementById('stat-outstanding').textContent = formatNaira(outstanding);
+  document.getElementById('stat-paid-count').textContent = paidCount;
+  document.getElementById('stat-owing-count').textContent = owingCount;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const students = getStudents();
+  document.getElementById('b-student').innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
+  refreshBursary();
+
+  document.getElementById('payment-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const me = getCurrentUser();
+    const studentId = document.getElementById('b-student').value;
+    const student = students.find(s => s.id === studentId);
+    const feeType = document.getElementById('b-type').value;
+    const amount = document.getElementById('b-amount').value;
+    const term = document.getElementById('b-term').value;
+    recordPayment({ studentId, studentName: student.name, feeType, amount, term, session: CURRENT_SESSION, recordedBy: me ? me.name : 'Bursary' });
+    const status = document.getElementById('payment-status');
+    status.hidden = false;
+    status.textContent = `Recorded ${formatNaira(amount)} (${feeType}) for ${student.name} — balances updated below.`;
+    document.getElementById('payment-form').reset();
+    refreshBursary();
+  });
+});
+</script>
 </div>
 </main>
 </div>

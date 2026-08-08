@@ -52,7 +52,7 @@
 <div class="stat-cards">
   <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Total Students</div></div>
   <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Total Staff</div></div>
-  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Fees Collected &mdash; This Term</div></div>
+  <div class="stat-card-sm"><div class="num" id="pr-stat-fees">[ ]</div><div class="label">Fees Collected &mdash; This Term</div></div>
   <div class="stat-card-sm"><div class="num">7</div><div class="label">Pending Admission Applications</div></div>
 </div>
 
@@ -102,11 +102,9 @@
 
   <div>
     <div class="panel" id="fees">
-      <h3>Fee Collection &mdash; This Term</h3>
-      <div class="progress-row"><div class="top"><span>Primary 1&ndash;3</span><span>72%</span></div><div class="progress-bar"><div class="fill" style="width:72%"></div></div></div>
-      <div class="progress-row"><div class="top"><span>Primary 4&ndash;6</span><span>64%</span></div><div class="progress-bar"><div class="fill" style="width:64%"></div></div></div>
-      <div class="progress-row"><div class="top"><span>JSS 1&ndash;3</span><span>58%</span></div><div class="progress-bar"><div class="fill" style="width:58%"></div></div></div>
-      <p class="form-note" style="margin-top:6px;">Full breakdown available in the Bursary reports once payments are recorded.</p>
+      <h3>Fee Collection &mdash; Term 1, 2026/2027</h3>
+      <div class="progress-row"><div class="top"><span>Collected</span><span id="pr-fee-label">&hellip;</span></div><div class="progress-bar"><div class="fill" id="pr-fee-bar" style="width:0%"></div></div></div>
+      <p class="form-note" style="margin-top:6px;">Full per-class breakdown available in the Bursary dashboard.</p>
     </div>
 
     <div class="panel" id="results">
@@ -133,11 +131,13 @@
 
     <div class="panel" id="announcements">
       <h3>Post an Announcement</h3>
-      <form onsubmit="event.preventDefault(); alert('Demo only — this will publish to the website and notify parents once connected.');">
+      <form id="pr-ann-form">
         <label for="pr-ann">Message</label>
-        <textarea id="pr-ann" rows="3" placeholder="e.g. Resumption date for 2026/2027 session is..."></textarea>
+        <textarea id="pr-ann" rows="3" placeholder="e.g. Resumption date for 2026/2027 session is..." required></textarea>
         <button type="submit" class="btn btn-navy" style="margin-top:12px;">Publish &rarr;</button>
       </form>
+      <p id="pr-ann-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+      <div id="pr-ann-list" style="margin-top:20px; display:grid; gap:10px;"></div>
     </div>
   </div>
 </div>
@@ -225,6 +225,45 @@ function renderUsersTable(){
 }
 document.addEventListener('DOMContentLoaded', () => {
   renderUsersTable();
+
+  const students = getStudents();
+  const term = 'Term 1', session = CURRENT_SESSION;
+  let collected = 0;
+  students.forEach(s => { collected += getTotalPaid(s.id, term, session); });
+  const expected = students.length * FEE_TOTAL_PER_TERM;
+  const pct = expected ? Math.round((collected/expected)*100) : 0;
+  const feesStat = document.getElementById('pr-stat-fees');
+  if(feesStat) feesStat.textContent = formatNaira(collected);
+  const prFeeLabel = document.getElementById('pr-fee-label');
+  const prFeeBar = document.getElementById('pr-fee-bar');
+  if(prFeeLabel) prFeeLabel.textContent = formatNaira(collected) + ' of ' + formatNaira(expected) + ' (' + pct + '%)';
+  if(prFeeBar) prFeeBar.style.width = pct + '%';
+
+  function renderAnnList(){
+    const list = document.getElementById('pr-ann-list');
+    if(!list) return;
+    list.innerHTML = getAnnouncements().slice(0,5).map(a => `
+      <div style="padding:12px 14px; background:var(--cream-dim); border-radius:4px; font-size:.85rem;">
+        <strong style="color:var(--navy-deep);">${a.date}</strong> — ${a.message}
+      </div>`).join('');
+  }
+  renderAnnList();
+  const annForm = document.getElementById('pr-ann-form');
+  if(annForm){
+    annForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const me = getCurrentUser();
+      const msg = document.getElementById('pr-ann').value.trim();
+      if(!msg) return;
+      addAnnouncement(msg, me ? me.name : 'Principal');
+      const status = document.getElementById('pr-ann-status');
+      status.hidden = false;
+      status.textContent = 'Published — now visible on the public News & Announcements page.';
+      annForm.reset();
+      renderAnnList();
+    });
+  }
+
   const lookupSel = document.getElementById('lookup-student');
   if(lookupSel){
     lookupSel.innerHTML = getStudents().map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');

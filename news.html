@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Academics | Ibn Hajar Foundation-Zaria</title>
-<meta name="description" content="Classes, curriculum, grading system and academic session at Ibn Hajar Foundation-Zaria.">
+<title>News & Announcements | Ibn Hajar Foundation-Zaria</title>
+<meta name="description" content="Latest news, resumption dates and admission notices from Ibn Hajar Foundation-Zaria.">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 <script src="auth.js"></script>
@@ -26,10 +26,10 @@
     <nav class="primary">
       <a class="" href="index.html">Home</a>
       <a class="" href="about.html">About Us</a>
-      <a class="active" href="academics.html">Academics</a>
+      <a class="" href="academics.html">Academics</a>
       <a class="" href="admissions.html">Admissions</a>
       <a class="" href="staff.html">Staff & Faculty</a>
-      <a class="" href="news.html">News</a>
+      <a class="active" href="news.html">News</a>
       <a class="" href="gallery.html">Gallery</a>
       <a class="" href="contact.html">Contact</a>
       <a class="nav-portal" href="portal.html">Staff &amp; Parent Login</a>
@@ -43,88 +43,36 @@
 
 <div class="page-header">
   <div class="wrap">
-    <div class="crumb"><a href="index.html">Home</a> / Academics</div>
-    <h1>Academics</h1>
-    <p style="color:rgba(255,255,255,.75); max-width:60ch; margin:0;">Classes offered, our curriculum, grading system and the current academic session.</p>
+    <div class="crumb"><a href="index.html">Home</a> / News &amp; Announcements</div>
+    <h1>News &amp; Announcements</h1>
+    <p style="color:rgba(255,255,255,.75); max-width:60ch; margin:0;">Updates from the school office &mdash; resumption dates, admission notices and more.</p>
   </div>
 </div>
 
-<section>
+<section class="tight">
   <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span class="star">★</span> CLASSES OFFERED</div>
-      <h2>Primary &amp; Junior Secondary School</h2>
-    </div>
-    <div class="split">
-      <div class="card">
-        <div class="badge">Primary School</div>
-        <h3 style="margin-top:14px;">Primary 1 &ndash; 6</h3>
-        <p>Foundational academic education delivered alongside daily Qur'an memorization and Islamic studies for boarding pupils.</p>
-      </div>
-      <div class="card">
-        <div class="badge">Junior Secondary School</div>
-        <h3 style="margin-top:14px;">JSS 1 &ndash; 3</h3>
-        <p>Continued conventional academic subjects and advanced Qur'an memorization / Tajweed for older boarding students.</p>
-      </div>
-    </div>
-    <p class="form-note" style="margin-top:24px;">Subject lists per class will be published here once finalized by the academic office.</p>
-  </div>
-</section>
-
-<section class="bg-dim">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span class="star">★</span> CURRICULUM</div>
-      <h2>Two curricula, taught as one programme</h2>
-    </div>
-    <div class="split">
-      <div class="pillars">
-        <div class="pillar">
-          <span class="star">★</span>
-          <div><h4>Qur'anic Curriculum</h4><p>Structured memorization (Hifz) with continuous revision, Tajweed rules and application, and Islamic studies covering Aqeedah, Fiqh and Seerah.</p></div>
-        </div>
-        <div class="pillar">
-          <span class="star">★</span>
-          <div><h4>Conventional Curriculum</h4><p>Core academic subjects for Primary and Junior Secondary School, delivered by qualified teachers to the standard required for progression to further education.</p></div>
-        </div>
-      </div>
-      <div class="col-media">Classroom / Qur'an class photo<br><span style="font-size:.75rem;">(add photo)</span></div>
+    <div id="news-list" style="display:grid; gap:18px; max-width:760px;">
+      <p>Loading&hellip;</p>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span class="star">★</span> GRADING SYSTEM</div>
-      <h2>How we report results</h2>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const list = document.getElementById('news-list');
+  const items = getAnnouncements();
+  if(!items.length){
+    list.innerHTML = '<p>No announcements yet — check back soon.</p>';
+    return;
+  }
+  list.innerHTML = items.map(a => `
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:10px;"><span class="star">&#9733;</span> ${a.date} &middot; ${a.postedBy || 'School Office'}</div>
+      <p style="margin:0; color:var(--ink);">${a.message}</p>
     </div>
-    <div class="split">
-      <div class="card" style="text-align:center;">
-        <h3>Excellent</h3>
-        <p>Outstanding performance, exceeding the expected standard.</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <h3>Good</h3>
-        <p>Solid performance, meeting the expected standard.</p>
-      </div>
-    </div>
-    <div class="card" style="text-align:center; max-width:520px; margin:20px auto 0;">
-      <h3>Fair</h3>
-      <p>Developing performance, with room identified for improvement.</p>
-    </div>
-    <p class="form-note" style="text-align:center; margin-top:20px;">Report cards use Excellent / Good / Fair per subject, per term. Parents can view their child's results through the <a href="portal.html" style="color:var(--navy-mid); font-weight:600;">Parent Portal</a>.</p>
-  </div>
-</section>
-
-<section class="bg-navy">
-  <div class="wrap" style="text-align:center;">
-    <div class="badge">Current Session</div>
-    <h2 style="margin-top:14px;">2026/2027 Academic Session</h2>
-    <p style="max-width:52ch; margin:0 auto 26px;">The school year runs across <strong style="color:var(--gold-soft);">3 terms</strong>. Admission is currently open for new students joining this session.</p>
-    <a href="admissions.html" class="btn btn-gold">Apply for 2026/2027 &rarr;</a>
-  </div>
-</section>
+  `).join('');
+});
+</script>
 <footer class="site">
   <div class="wrap">
     <div class="footer-grid">
