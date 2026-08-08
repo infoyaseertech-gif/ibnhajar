@@ -11,9 +11,17 @@
 <script src="records.js"></script>
 </head>
 <body>
-<div class="announce">
-  <strong>Admission Now Open — 2026/2027 Session.</strong> Enrol your child in our Qur'an memorization &amp; academic boarding programme. <a href="admissions.html">Apply today &rarr;</a>
-</div>
+<div class="announce" id="site-banner" hidden></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const el = document.getElementById('site-banner');
+  const text = getSiteBanner();
+  if(text && text.trim()){
+    el.innerHTML = text;
+    el.hidden = false;
+  }
+});
+</script>
 <header class="site">
   <div class="nav-row">
     <a class="brand" href="index.html">

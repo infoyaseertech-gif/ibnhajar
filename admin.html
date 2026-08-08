@@ -38,50 +38,34 @@
 </div>
 <div class="dash-content">
 
-<div class="demo-banner">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
-  <div><strong>Demo preview</strong> &mdash; sample data shown. As Admin you manage student records, review admission applications, and post school announcements.</div>
-</div>
-
 <div class="stat-cards">
   <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Total Students</div></div>
-  <div class="stat-card-sm"><div class="num">7</div><div class="label">Pending Applications</div></div>
+  <div class="stat-card-sm"><div class="num" id="ad-stat-pending">&hellip;</div><div class="label">Pending Applications</div></div>
   <div class="stat-card-sm"><div class="num">2</div><div class="label">Classes &mdash; Primary &amp; JSS</div></div>
-  <div class="stat-card-sm"><div class="num">3</div><div class="label">Announcements This Term</div></div>
+  <div class="stat-card-sm"><div class="num" id="ad-stat-ann">&hellip;</div><div class="label">Announcements Posted</div></div>
 </div>
 
-<div class="panel" id="admissions">
+<div class="panel" id="admissions" data-requires="manageAdmissions">
   <h3>Admission Applications</h3>
   <table class="dtable">
     <thead><tr><th>Applicant</th><th>Class</th><th>Guardian</th><th>Phone</th><th>Status</th><th></th></tr></thead>
-    <tbody>
-      <tr><td>Amina Yusuf Ibrahim</td><td>Primary 3</td><td>Yusuf Ibrahim</td><td>0803 000 0000</td><td><span class="pill pill-pending">Pending</span></td>
-        <td><button class="btn-xs btn-view">View</button> <button class="btn-xs btn-approve">Approve</button> <button class="btn-xs btn-reject">Reject</button></td></tr>
-      <tr><td>Abdulrahman Musa</td><td>JSS 1</td><td>Musa Aliyu</td><td>0803 000 0001</td><td><span class="pill pill-pending">Pending</span></td>
-        <td><button class="btn-xs btn-view">View</button> <button class="btn-xs btn-approve">Approve</button> <button class="btn-xs btn-reject">Reject</button></td></tr>
-      <tr><td>Khadija Sani</td><td>Primary 5</td><td>Sani Bello</td><td>0803 000 0002</td><td><span class="pill pill-excellent">Approved</span></td>
-        <td><button class="btn-xs btn-view">View</button></td></tr>
-    </tbody>
+    <tbody id="ad-applications-body"><tr><td colspan="6">Loading&hellip;</td></tr></tbody>
   </table>
 </div>
 
 <div class="dash-grid-2">
   <div>
-    <div class="panel" id="students">
+    <div class="panel" id="students" data-requires="manageStudents">
       <h3>Student Records <span class="see-all">+ Add new student</span></h3>
       <table class="dtable">
         <thead><tr><th>Name</th><th>Class</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>[Student Name]</td><td>Primary 4</td><td><span class="pill pill-excellent">Active</span></td></tr>
-          <tr><td>[Student Name]</td><td>JSS 2</td><td><span class="pill pill-excellent">Active</span></td></tr>
-          <tr><td>[Student Name]</td><td>Primary 1</td><td><span class="pill pill-excellent">Active</span></td></tr>
-        </tbody>
+        <tbody id="ad-students-body"><tr><td colspan="3">Loading&hellip;</td></tr></tbody>
       </table>
     </div>
   </div>
 
   <div>
-    <div class="panel" id="announcements">
+    <div class="panel" id="announcements" data-requires="postAnnouncements">
       <h3>Post an Announcement</h3>
       <form id="ad-ann-form">
         <label for="ad-ann">Message</label>
@@ -92,7 +76,7 @@
       <div id="ad-ann-list" style="margin-top:20px; display:grid; gap:10px;"></div>
     </div>
 
-    <div class="panel" id="school-info">
+    <div class="panel" id="school-info" data-requires="editSchoolInfo">
       <h3>School Information</h3>
       <div style="display:grid; gap:14px;">
         <div><label>School Name</label><input value="IBN HAJAR FOUNDATION-ZARIA"></div>
@@ -106,20 +90,67 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  const me = getCurrentUser();
+
+  // Hide panels this account doesn't have permission for
+  document.querySelectorAll('[data-requires]').forEach(el => {
+    if(!hasPermission(me, el.getAttribute('data-requires'))) el.remove();
+  });
+
+  // ---- Applications ----
+  function renderApplications(){
+    const body = document.getElementById('ad-applications-body');
+    if(!body) return;
+    const apps = getApplications();
+    document.getElementById('ad-stat-pending').textContent = countPendingApplications();
+    body.innerHTML = apps.length ? apps.map(a => {
+      const pillClass = a.status === 'approved' ? 'pill-excellent' : a.status === 'rejected' ? 'pill-owing' : 'pill-pending';
+      const label = a.status.charAt(0).toUpperCase() + a.status.slice(1);
+      return `<tr>
+        <td>${a.studentName}</td><td>${a.classApplyingFor || ''}</td><td>${a.guardianName || ''}</td><td>${a.guardianPhone || ''}</td>
+        <td><span class="pill ${pillClass}">${label}</span></td>
+        <td style="white-space:nowrap;">
+          <button class="btn-xs btn-approve" data-app-approve="${a.id}">Approve</button>
+          <button class="btn-xs btn-reject" data-app-reject="${a.id}">Reject</button>
+          <button class="btn-xs btn-view" data-app-remove="${a.id}">Remove</button>
+        </td></tr>`;
+    }).join('') : '<tr><td colspan="6">No applications yet.</td></tr>';
+    body.querySelectorAll('[data-app-approve]').forEach(b => b.addEventListener('click', () => { setApplicationStatus(b.getAttribute('data-app-approve'), 'approved'); renderApplications(); }));
+    body.querySelectorAll('[data-app-reject]').forEach(b => b.addEventListener('click', () => { setApplicationStatus(b.getAttribute('data-app-reject'), 'rejected'); renderApplications(); }));
+    body.querySelectorAll('[data-app-remove]').forEach(b => b.addEventListener('click', () => {
+      if(confirm('Remove this application permanently?')){ removeApplication(b.getAttribute('data-app-remove')); renderApplications(); }
+    }));
+  }
+  if(document.getElementById('ad-applications-body')) renderApplications();
+
+  // ---- Students (demo list) ----
+  const studentsBody = document.getElementById('ad-students-body');
+  if(studentsBody){
+    studentsBody.innerHTML = getStudents().map(s =>
+      `<tr><td>${s.name}</td><td>${s.class}</td><td><span class="pill pill-excellent">Active</span></td></tr>`
+    ).join('');
+  }
+
+  // ---- Announcements ----
   function renderAdList(){
     const list = document.getElementById('ad-ann-list');
     if(!list) return;
-    list.innerHTML = getAnnouncements().slice(0,5).map(a => `
-      <div style="padding:12px 14px; background:var(--cream-dim); border-radius:4px; font-size:.85rem;">
-        <strong style="color:var(--navy-deep);">${a.date}</strong> — ${a.message}
-      </div>`).join('');
+    const items = getAnnouncements();
+    const annStat = document.getElementById('ad-stat-ann');
+    if(annStat) annStat.textContent = items.length;
+    list.innerHTML = items.length ? items.slice(0,8).map(a => `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:12px 14px; background:var(--cream-dim); border-radius:4px; font-size:.85rem;">
+        <div><strong style="color:var(--navy-deep);">${a.date}</strong> — ${a.message}</div>
+        <button class="btn-xs btn-view" data-ann-remove="${a.id}" style="flex:none;">Remove</button>
+      </div>`).join('') : '<p class="form-note">No announcements posted yet.</p>';
+    list.querySelectorAll('[data-ann-remove]').forEach(b => b.addEventListener('click', () => { removeAnnouncement(b.getAttribute('data-ann-remove')); renderAdList(); }));
   }
-  renderAdList();
+  if(document.getElementById('ad-ann-list')) renderAdList();
+
   const form = document.getElementById('ad-ann-form');
   if(form){
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const me = getCurrentUser();
       const msg = document.getElementById('ad-ann').value.trim();
       if(!msg) return;
       addAnnouncement(msg, me ? me.name : 'Admin');

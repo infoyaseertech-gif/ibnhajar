@@ -50,7 +50,7 @@
   <div class="stat-card-sm"><div class="num" id="stat-owing-count">&hellip;</div><div class="label">Students Owing</div></div>
 </div>
 
-<div class="panel" id="record-payment">
+<div class="panel" id="record-payment" data-requires="recordPayments">
   <h3>Record a Payment</h3>
   <form id="payment-form" class="form-inline">
     <div class="field"><label for="b-student">Student</label><select id="b-student"></select></div>
@@ -76,7 +76,7 @@
   </div>
 
   <div>
-    <div class="panel" id="reports">
+    <div class="panel" id="reports" data-requires="viewReports">
       <h3>Fee Collection by Class</h3>
       <div class="progress-row"><div class="top"><span>Primary 1&ndash;3</span><span>72%</span></div><div class="progress-bar"><div class="fill" style="width:72%"></div></div></div>
       <div class="progress-row"><div class="top"><span>Primary 4&ndash;6</span><span>64%</span></div><div class="progress-bar"><div class="fill" style="width:64%"></div></div></div>
@@ -110,11 +110,18 @@ function refreshBursary(){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const me = getCurrentUser();
+  document.querySelectorAll('[data-requires]').forEach(el => {
+    if(!hasPermission(me, el.getAttribute('data-requires'))) el.remove();
+  });
+
   const students = getStudents();
-  document.getElementById('b-student').innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
+  const studentSel = document.getElementById('b-student');
+  if(studentSel) studentSel.innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
   refreshBursary();
 
-  document.getElementById('payment-form').addEventListener('submit', (e) => {
+  const paymentForm = document.getElementById('payment-form');
+  if(paymentForm) paymentForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const me = getCurrentUser();
     const studentId = document.getElementById('b-student').value;

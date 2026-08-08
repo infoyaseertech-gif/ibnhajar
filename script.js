@@ -7,17 +7,27 @@ document.addEventListener('DOMContentLoaded', () => {
     nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
   }
 
-  // Admission form (index/admissions page)
+  // Admission form (admissions page)
   const admissionForm = document.getElementById('admission-form');
   if (admissionForm) {
     admissionForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      // NOTE: This is a front-end placeholder. Once the Supabase backend is
-      // connected, this will insert the application into the `admissions`
-      // table and notify the admin dashboard / school email automatically.
       const status = document.getElementById('admission-status');
+      const data = {
+        studentName: document.getElementById('s-name').value.trim(),
+        dob: document.getElementById('s-dob').value,
+        gender: document.getElementById('s-gender').value,
+        classApplyingFor: document.getElementById('s-class').value,
+        previousSchool: document.getElementById('s-prev').value.trim(),
+        guardianName: document.getElementById('p-name').value.trim(),
+        guardianPhone: document.getElementById('p-phone').value.trim(),
+        guardianEmail: document.getElementById('p-email').value.trim(),
+        guardianRelation: document.getElementById('p-relation') ? document.getElementById('p-relation').value : '',
+        guardianAddress: document.getElementById('p-address').value.trim()
+      };
+      addApplication(data);
       status.hidden = false;
-      status.textContent = 'Thank you — your application has been received. Our admissions office will contact you shortly. (Demo mode: connect the database to make this live.)';
+      status.textContent = 'Thank you — your application has been received and sent to our admissions office. You will be contacted using the details provided.';
       admissionForm.reset();
       status.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });

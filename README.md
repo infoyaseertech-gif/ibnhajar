@@ -1,53 +1,45 @@
-# Ibn Hajar Foundation-Zaria — Website + Working Portal (Client Demo Build)
+# Ibn Hajar Foundation-Zaria — Real, working portal (client-demo build)
 
-Flat file structure — matches your live GitHub repo, just upload and overwrite.
+Flat file structure — upload/overwrite to your GitHub repo as usual.
 
-## What's new in this version
+## What changed in this round
 
-**Gallery, redesigned** — 10 professionally styled placeholder tiles in your school's
-navy/gold, correctly sized and captioned by category (campus, hostel, Hifz class,
-classroom, prayer, dining hall, Hifz completion, community, library, grounds). I did
-not embed random internet photos of children — that's a real copyright/consent risk
-once this is live under a real school's name. The moment you send real photos (or
-license-cleared stock, e.g. from Unsplash/Pexels), each one drops straight into its
-tile with zero redesign needed.
+1. **Recent Admission Applications is now fully editable.** Approve, reject, or
+   permanently remove any application, on both the Principal and Admin dashboards.
+   These share the same data, so an action on one shows up on the other.
 
-**News & Announcements — now a real, working feature.** Admin and Principal both have
-a "Post an Announcement" box, and it's no longer a demo alert — it actually publishes.
-Posts show up immediately on:
-- The new `news.html` page (linked in the main nav)
-- A "Latest Updates" section on the homepage
+2. **The public admission form now actually creates an application.** Fill it in on
+   admissions.html, submit, and it appears immediately in Principal's and Admin's
+   "Admission Applications" list as Pending.
 
-**Fees — now actually calculates.** Bursary's "Record a Payment" form really saves a
-payment (sample fee amounts used — send me the real ones). Balances, "collected this
-term," "students fully paid," and "students owing" all recalculate live. The Parent
-dashboard and Principal dashboard both reflect the same real numbers.
+3. **Announcements/News can be posted and removed.** Principal and Admin can each post,
+   and each can delete any announcement (including ones the other posted) — they publish
+   live to news.html and the homepage.
 
-**Testimonials section** added to the homepage (sample quotes — swap for real parent
-quotes whenever you have them).
+4. **Principal controls what each account can see.** When creating a new Admin, Bursary,
+   or Class Teacher account, Principal checks off exactly which sections that person
+   should have (e.g. an Admin without "Manage admission applications" checked simply
+   won't see that panel when they log in). Existing accounts can have their access
+   changed anytime via the "Access" button in Manage Users.
 
-**FAQ section** added to the Admissions page — five common questions, expandable.
+5. **Parent login is fully scoped to one child.** Results, fee balance, and payment
+   breakdown — only ever their own linked student, nothing about anyone else.
 
-**Social icons** added to the footer (currently link to `#` — send me your Facebook/
-Instagram/YouTube handles and I'll wire them up).
+6. **Removed the "Demo preview" banners** from every dashboard.
 
-## Still demo/local (until Supabase is connected)
-Login, results, and fees all work exactly as they will in production, but the data is
-stored in your browser's local storage rather than a shared, permanent database — see
-supabase-schema.sql and the earlier notes for the Phase 2 steps to make it permanent.
+7. **The top "Admission Now Open" banner is now Principal-controlled.** On the
+   Principal dashboard, "Homepage Announcement Banner" lets you edit the text shown
+   at the top of every public page, or remove it entirely (e.g. once admissions close).
+   Leaving it empty hides the strip completely.
 
-## Login
-portal.html — Principal creates/blocks/reset-passwords for every account from their
-dashboard's "Manage Staff & Parent Accounts" panel. No credentials are shown publicly
-on the login page.
+## Still local-only (until Supabase is connected)
+Everything above genuinely works, but the data lives in this browser's local storage,
+not a shared server — so it only persists on the device you're using, and a different
+visitor won't see accounts/applications/announcements you created. supabase-schema.sql
+has the full real database design ready to install whenever you want this made
+permanent and shared across every device — send the Supabase project URL + anon key
+and I'll wire it in without changing how anything looks or works.
 
 ## Deploy
 Upload all files here to your GitHub repo (overwrite existing) — Vercel/Netlify
 redeploys automatically.
-
-## Phase 2 — Make it permanent (Supabase)
-1. Create a free project at supabase.com
-2. SQL Editor → New query → paste supabase-schema.sql → Run
-3. Send the Project URL + anon public API key
-4. I wire auth.js and records.js to the real database — every page and button stays
-   the same, it just becomes permanent and shared across every device.

@@ -94,6 +94,65 @@ function addAnnouncement(message, postedBy){
   list.unshift({ id:'a'+Date.now(), message, postedBy, date: new Date().toISOString().slice(0,10) });
   localStorage.setItem('ihf_announcements', JSON.stringify(list));
 }
+function removeAnnouncement(id){
+  const list = getAnnouncements().filter(a => a.id !== id);
+  localStorage.setItem('ihf_announcements', JSON.stringify(list));
+}
+
+// =========================================================================
+// SITE-WIDE TOP BANNER — Principal controls the "Admission Now Open" strip
+// shown across every public page. Empty = hidden.
+// =========================================================================
+const DEFAULT_BANNER = "<strong>Admission Now Open — 2026/2027 Session.</strong> Enrol your child in our Qur'an memorization &amp; academic boarding programme. <a href=\"admissions.html\">Apply today &rarr;</a>";
+function getSiteBanner(){
+  const v = localStorage.getItem('ihf_banner');
+  return v === null ? DEFAULT_BANNER : v;
+}
+function setSiteBanner(html){
+  localStorage.setItem('ihf_banner', html);
+}
+
+// =========================================================================
+// ADMISSION APPLICATIONS — the public admission form saves here, and
+// Principal/Admin can accept, reject, or remove any entry.
+// =========================================================================
+const DEMO_APPLICATIONS = [
+  { id:'ap1', studentName:'Amina Yusuf Ibrahim', classApplyingFor:'Primary 3', dob:'2018-03-14', gender:'Female', guardianName:'Yusuf Ibrahim', guardianPhone:'0803 000 0000', guardianEmail:'yusuf.ibrahim@example.com', previousSchool:'', status:'pending', submittedAt:'2026-08-05' },
+  { id:'ap2', studentName:'Abdulrahman Musa', classApplyingFor:'JSS 1', dob:'2013-11-02', gender:'Male', guardianName:'Musa Aliyu', guardianPhone:'0803 000 0001', guardianEmail:'musa.aliyu@example.com', previousSchool:'Al-Furqan Primary', status:'pending', submittedAt:'2026-08-04' },
+  { id:'ap3', studentName:'Khadija Sani', classApplyingFor:'Primary 5', dob:'2016-06-21', gender:'Female', guardianName:'Sani Bello', guardianPhone:'0803 000 0002', guardianEmail:'sani.bello@example.com', previousSchool:'', status:'approved', submittedAt:'2026-08-02' }
+];
+function seedApplications(){
+  if(!localStorage.getItem('ihf_applications')){
+    localStorage.setItem('ihf_applications', JSON.stringify(DEMO_APPLICATIONS));
+  }
+}
+function getApplications(){
+  seedApplications();
+  try { return JSON.parse(localStorage.getItem('ihf_applications')).sort((a,b)=> b.submittedAt.localeCompare(a.submittedAt)); }
+  catch(e){ return []; }
+}
+function addApplication(data){
+  const list = getApplications();
+  list.unshift({
+    id: 'ap' + Date.now(),
+    status: 'pending',
+    submittedAt: new Date().toISOString().slice(0,10),
+    ...data
+  });
+  localStorage.setItem('ihf_applications', JSON.stringify(list));
+}
+function setApplicationStatus(id, status){
+  const list = getApplications();
+  const a = list.find(x => x.id === id);
+  if(a){ a.status = status; localStorage.setItem('ihf_applications', JSON.stringify(list)); }
+}
+function removeApplication(id){
+  const list = getApplications().filter(a => a.id !== id);
+  localStorage.setItem('ihf_applications', JSON.stringify(list));
+}
+function countPendingApplications(){
+  return getApplications().filter(a => a.status === 'pending').length;
+}
 
 // =========================================================================
 // FEES — sample per-term amounts (replace with real figures from the school).

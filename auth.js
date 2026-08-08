@@ -13,12 +13,20 @@ const ROLE_PAGE = {
   'Parent': 'parent.html'
 };
 
+const DEFAULT_PERMISSIONS = {
+  Admin: { manageAdmissions:true, postAnnouncements:true, editSchoolInfo:true, manageStudents:true },
+  Bursary: { recordPayments:true, viewReports:true },
+  'Class Teacher': { markAttendance:true, enterResults:true },
+  Parent: {},
+  Principal: {}
+};
+
 const DEFAULT_USERS = [
-  { id:'u1', name:'The Principal', username:'principal', password:'Principal@123', role:'Principal', status:'active', mustChange:true },
-  { id:'u2', name:'School Admin', username:'admin', password:'Admin@123', role:'Admin', status:'active', mustChange:true },
-  { id:'u3', name:'Bursary Officer', username:'bursary', password:'Bursary@123', role:'Bursary', status:'active', mustChange:true },
-  { id:'u4', name:'Class Teacher — Primary 4', username:'teacher1', password:'Teacher@123', role:'Class Teacher', status:'active', assignedClass:'Primary 4', mustChange:true },
-  { id:'u5', name:'Parent of Amina Yusuf Ibrahim', username:'parent1', password:'Parent@123', role:'Parent', status:'active', childName:'Amina Yusuf Ibrahim', childId:'st1', mustChange:true }
+  { id:'u1', name:'The Principal', username:'principal', password:'Principal@123', role:'Principal', status:'active', mustChange:true, permissions:{} },
+  { id:'u2', name:'School Admin', username:'admin', password:'Admin@123', role:'Admin', status:'active', mustChange:true, permissions:{ manageAdmissions:true, postAnnouncements:true, editSchoolInfo:true, manageStudents:true } },
+  { id:'u3', name:'Bursary Officer', username:'bursary', password:'Bursary@123', role:'Bursary', status:'active', mustChange:true, permissions:{ recordPayments:true, viewReports:true } },
+  { id:'u4', name:'Class Teacher — Primary 4', username:'teacher1', password:'Teacher@123', role:'Class Teacher', status:'active', assignedClass:'Primary 4', mustChange:true, permissions:{ markAttendance:true, enterResults:true } },
+  { id:'u5', name:'Parent of Amina Yusuf Ibrahim', username:'parent1', password:'Parent@123', role:'Parent', status:'active', childName:'Amina Yusuf Ibrahim', childId:'st1', mustChange:true, permissions:{} }
 ];
 
 function seedUsers(){
@@ -101,7 +109,7 @@ function changePassword(userId, currentPassword, newPassword){
 }
 
 // --- Principal-only user management ---
-function createUser({ name, username, password, role, assignedClass, childName }){
+function createUser({ name, username, password, role, assignedClass, childName, permissions }){
   const users = getUsers();
   if(!name || !username || !password || !role) return { ok:false, msg:'Please fill in every field.' };
   if(users.find(x => x.username.toLowerCase() === username.toLowerCase())) return { ok:false, msg:'That username is already taken.' };
@@ -111,10 +119,24 @@ function createUser({ name, username, password, role, assignedClass, childName }
     status: 'active',
     mustChange: true,
     assignedClass: assignedClass || undefined,
-    childName: childName || undefined
+    childName: childName || undefined,
+    permissions: permissions || DEFAULT_PERMISSIONS[role] || {}
   });
   saveUsers(users);
   return { ok:true };
+}
+
+function setUserPermissions(userId, permissions){
+  const users = getUsers();
+  const u = users.find(x => x.id === userId);
+  if(u){ u.permissions = permissions; saveUsers(users); return true; }
+  return false;
+}
+
+function hasPermission(user, key){
+  if(!user) return false;
+  if(user.role === 'Principal') return true;
+  return !!(user.permissions && user.permissions[key]);
 }
 
 function setUserStatus(userId, status){

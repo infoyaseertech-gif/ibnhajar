@@ -37,11 +37,6 @@
 </div>
 <div class="dash-content">
 
-<div class="demo-banner">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
-  <div><strong>Demo preview</strong> &mdash; sample data shown. As a Class Teacher you only see and manage your own assigned class: <strong>Primary 4</strong> (example) &mdash; class list, attendance, and results entry.</div>
-</div>
-
 <div class="stat-cards">
   <div class="stat-card-sm"><div class="num">Primary 4</div><div class="label">Your Assigned Class</div></div>
   <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Students in Class</div></div>
@@ -59,7 +54,7 @@
 
 <div class="dash-grid-2">
   <div>
-    <div class="panel" id="attendance">
+    <div class="panel" id="attendance" data-requires="markAttendance">
       <h3>Mark Today's Attendance</h3>
       <div class="attend-grid head"><span>Student</span><span>Present</span><span>Absent</span><span>Late</span></div>
       <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a1" checked><input type="radio" name="a1"><input type="radio" name="a1"></div>
@@ -70,7 +65,7 @@
   </div>
 
   <div>
-    <div class="panel" id="results">
+    <div class="panel" id="results" data-requires="enterResults">
       <h3>Enter Results &mdash; Add Any Number of Subjects</h3>
       <div class="form-grid" style="margin-bottom:18px;">
         <div>
@@ -142,10 +137,14 @@ function renderStudentHistory(studentId){
 
 document.addEventListener('DOMContentLoaded', () => {
   const me = getCurrentUser();
+  document.querySelectorAll('[data-requires]').forEach(el => {
+    if(!hasPermission(me, el.getAttribute('data-requires'))) el.remove();
+  });
+
   const studentSel = document.getElementById('t-student');
   const myClass = me && me.assignedClass ? me.assignedClass : null;
   const students = myClass ? getStudentsForClass(myClass) : getStudents();
-  studentSel.innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
+  if(studentSel) studentSel.innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
 
   const titleEl = document.getElementById('class-list-title');
   if(titleEl) titleEl.textContent = 'Class List' + (myClass ? ' — ' + myClass : '');
@@ -156,13 +155,16 @@ document.addEventListener('DOMContentLoaded', () => {
       : '<tr><td colspan="2">No students found for this class yet.</td></tr>';
   }
 
-  addSubjectRow('', 'Excellent');
-  renderStudentHistory(studentSel.value);
+  if(studentSel){
+    addSubjectRow('', 'Excellent');
+    renderStudentHistory(studentSel.value);
+    studentSel.addEventListener('change', () => renderStudentHistory(studentSel.value));
+  }
+  const addRowBtn = document.getElementById('add-subject-row');
+  if(addRowBtn) addRowBtn.addEventListener('click', () => addSubjectRow());
 
-  studentSel.addEventListener('change', () => renderStudentHistory(studentSel.value));
-  document.getElementById('add-subject-row').addEventListener('click', () => addSubjectRow());
-
-  document.getElementById('save-results-btn').addEventListener('click', () => {
+  const saveBtn = document.getElementById('save-results-btn');
+  if(saveBtn) saveBtn.addEventListener('click', () => {
     const student = students.find(s => s.id === studentSel.value);
     if(!student){ return; }
     const session = document.getElementById('t-session').value.trim() || CURRENT_SESSION;
