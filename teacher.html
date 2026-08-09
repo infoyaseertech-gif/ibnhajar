@@ -19,6 +19,7 @@
   <div class="dash-role-tag" data-user-role>Class Teacher</div>
   <nav class="dash-nav" id="dash-nav">
       <a class="active" href="javascript:void(0)" data-nav-key="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
+      <a class="" href="javascript:void(0)" data-nav-key="roster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Manage Students</span></a>
       <a class="" href="javascript:void(0)" data-nav-key="attendance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg><span>Attendance</span></a>
       <a class="" href="javascript:void(0)" data-nav-key="results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results Entry</span></a>
   </nav>
@@ -39,16 +40,38 @@
 
 <div class="dash-section" data-key="dashboard">
   <div class="stat-cards">
-    <div class="stat-card-sm"><div class="num">Primary 4</div><div class="label">Your Assigned Class</div></div>
-    <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Students in Class</div></div>
+    <div class="stat-card-sm"><div class="num" id="td-class">Primary 4</div><div class="label">Your Assigned Class</div></div>
+    <div class="stat-card-sm"><div class="num" id="td-count">[ ]</div><div class="label">Students in Class</div></div>
     <div class="stat-card-sm"><div class="num">Term 1</div><div class="label">Current Term</div></div>
     <div class="stat-card-sm"><div class="num">In progress</div><div class="label">Results Status</div></div>
   </div>
   <div class="panel">
     <h3 id="class-list-title">Class List</h3>
     <table class="dtable">
-      <thead><tr><th>Student</th><th>Class</th></tr></thead>
-      <tbody id="class-list-body"><tr><td colspan="2">Loading&hellip;</td></tr></tbody>
+      <thead><tr><th>Student</th><th>Gender</th><th>Admission No.</th></tr></thead>
+      <tbody id="class-list-body"><tr><td colspan="3">Loading&hellip;</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="dash-section" data-key="roster" hidden>
+  <div class="panel">
+    <h3>Add a Student to Your Class</h3>
+    <form id="add-student-form" class="form-grid">
+      <div><label for="as-name">Full Name</label><input id="as-name" required></div>
+      <div><label for="as-gender">Gender</label><select id="as-gender"><option>Male</option><option>Female</option></select></div>
+      <div><label for="as-admno">Admission Number</label><input id="as-admno" placeholder="e.g. IHF/2026/041"></div>
+      <div><label for="as-dob">Date of Birth</label><input id="as-dob" type="date"></div>
+      <div class="full"><button type="submit" class="btn btn-gold">Add Student &rarr;</button></div>
+    </form>
+    <p id="add-student-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+  </div>
+
+  <div class="panel">
+    <h3>Manage Your Class Roster</h3>
+    <table class="dtable">
+      <thead><tr><th>Student</th><th>Gender</th><th>Admission No.</th><th></th></tr></thead>
+      <tbody id="roster-body"><tr><td colspan="4">Loading&hellip;</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -62,6 +85,21 @@
     <div id="attendance-rows"></div>
     <button class="btn btn-navy" id="save-attendance-btn" style="margin-top:16px;">Save Attendance &rarr;</button>
     <p id="attendance-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+  </div>
+
+  <div class="panel">
+    <h3>Attendance Summary</h3>
+    <p class="form-note" style="margin-top:-8px;">How often each student has attended, been absent, or arrived late.</p>
+    <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+      <button class="btn-xs btn-view" data-range="7">This Week</button>
+      <button class="btn-xs btn-view" data-range="30">This Month</button>
+      <button class="btn-xs btn-view" data-range="">This Term</button>
+      <button class="btn-xs btn-view" data-range="">This Session</button>
+    </div>
+    <table class="dtable">
+      <thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>Late</th><th>Days Marked</th></tr></thead>
+      <tbody id="attendance-summary-body"><tr><td colspan="5">Choose a period above.</td></tr></tbody>
+    </table>
   </div>
 </div>
 
@@ -135,29 +173,67 @@ function renderStudentHistory(studentId){
   }).join('');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const me = getCurrentUser();
-  const studentSel = document.getElementById('t-student');
-  const myClass = me && me.assignedClass ? me.assignedClass : null;
-  const students = myClass ? getStudentsForClass(myClass) : getStudents();
-  if(studentSel) studentSel.innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
-
-  const titleEl = document.getElementById('class-list-title');
-  if(titleEl) titleEl.textContent = 'Class List' + (myClass ? ' — ' + myClass : '');
+function refreshTeacherData(myClass){
+  const students = getStudentsForClass(myClass);
   const listBody = document.getElementById('class-list-body');
   if(listBody){
     listBody.innerHTML = students.length
-      ? students.map(s => `<tr><td>${s.name}</td><td>${s.class}</td></tr>`).join('')
-      : '<tr><td colspan="2">No students found for this class yet.</td></tr>';
+      ? students.map(s => `<tr><td>${s.name}</td><td>${s.gender||''}</td><td>${s.admissionNumber||''}</td></tr>`).join('')
+      : '<tr><td colspan="3">No students in this class yet — add one from the Manage Roster tab.</td></tr>';
+  }
+  const countEl = document.getElementById('td-count');
+  if(countEl) countEl.textContent = students.length;
+
+  const rosterBody = document.getElementById('roster-body');
+  if(rosterBody){
+    rosterBody.innerHTML = students.length ? students.map(s => `
+      <tr><td>${s.name}</td><td>${s.gender||''}</td><td>${s.admissionNumber||''}</td>
+        <td style="white-space:nowrap;"><button class="btn-xs btn-view" data-edit-student="${s.id}">Edit</button> <button class="btn-xs btn-reject" data-remove-student="${s.id}">Remove</button></td></tr>
+    `).join('') : '<tr><td colspan="4">No students yet.</td></tr>';
+    rosterBody.querySelectorAll('[data-edit-student]').forEach(b => b.addEventListener('click', () => {
+      const s = students.find(x => x.id === b.getAttribute('data-edit-student'));
+      if(!s) return;
+      const newName = prompt('Student full name:', s.name);
+      if(newName === null) return;
+      const newGender = prompt('Gender (Male/Female):', s.gender || '');
+      const newAdmNo = prompt('Admission number:', s.admissionNumber || '');
+      updateStudent(s.id, { name: newName.trim() || s.name, gender: newGender, admissionNumber: newAdmNo });
+      refreshTeacherData(myClass);
+    }));
+    rosterBody.querySelectorAll('[data-remove-student]').forEach(b => b.addEventListener('click', () => {
+      if(confirm('Remove this student from your class permanently?')){
+        removeStudent(b.getAttribute('data-remove-student'));
+        refreshTeacherData(myClass);
+      }
+    }));
   }
 
+  const studentSel = document.getElementById('t-student');
   if(studentSel){
-    addSubjectRow('', 'Excellent');
+    const prev = studentSel.value;
+    studentSel.innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
+    if(prev && students.find(s=>s.id===prev)) studentSel.value = prev;
     renderStudentHistory(studentSel.value);
-    studentSel.addEventListener('change', () => renderStudentHistory(studentSel.value));
   }
+
+  return students;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const me = getCurrentUser();
+  const myClass = me && me.assignedClass ? me.assignedClass : '';
+  const classTag = document.getElementById('td-class');
+  if(classTag) classTag.textContent = myClass || 'Not assigned';
+  const titleEl = document.getElementById('class-list-title');
+  if(titleEl) titleEl.textContent = 'Class List' + (myClass ? ' — ' + myClass : '');
+
+  let students = refreshTeacherData(myClass);
+
+  addSubjectRow('', 'Excellent');
   const addRowBtn = document.getElementById('add-subject-row');
   if(addRowBtn) addRowBtn.addEventListener('click', () => addSubjectRow());
+  const studentSel = document.getElementById('t-student');
+  if(studentSel) studentSel.addEventListener('change', () => renderStudentHistory(studentSel.value));
 
   const saveBtn = document.getElementById('save-results-btn');
   if(saveBtn) saveBtn.addEventListener('click', () => {
@@ -185,6 +261,28 @@ document.addEventListener('DOMContentLoaded', () => {
       : 'Enter at least one subject name before saving.';
     if(saved > 0) renderStudentHistory(student.id);
   });
+
+  // ---- Add student ----
+  const addForm = document.getElementById('add-student-form');
+  if(addForm){
+    addForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const result = addStudent({
+        name: document.getElementById('as-name').value.trim(),
+        className: myClass,
+        gender: document.getElementById('as-gender').value,
+        admissionNumber: document.getElementById('as-admno').value.trim(),
+        dob: document.getElementById('as-dob').value
+      });
+      const status = document.getElementById('add-student-status');
+      status.hidden = false;
+      status.textContent = result.ok ? 'Student added to your class.' : result.msg;
+      if(result.ok){
+        addForm.reset();
+        students = refreshTeacherData(myClass);
+      }
+    });
+  }
 
   // ---- Attendance: real, per date/class ----
   const attDateInput = document.getElementById('att-date');
@@ -221,6 +319,22 @@ document.addEventListener('DOMContentLoaded', () => {
       status.textContent = `Attendance saved for ${myClass || 'your class'} on ${date}.`;
     });
   }
+
+  // ---- Attendance summary ----
+  document.querySelectorAll('[data-range]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-range]').forEach(b => b.classList.remove('btn-approve'));
+      btn.classList.add('btn-approve');
+      const days = btn.getAttribute('data-range') ? parseInt(btn.getAttribute('data-range')) : null;
+      const summary = getAttendanceSummary(myClass || '', days);
+      const body = document.getElementById('attendance-summary-body');
+      const ids = Object.keys(summary);
+      body.innerHTML = ids.length ? ids.map(id => {
+        const s = summary[id];
+        return `<tr><td>${s.name}</td><td>${s.present}</td><td>${s.absent}</td><td>${s.late}</td><td>${s.daysMarked}</td></tr>`;
+      }).join('') : '<tr><td colspan="5">No attendance recorded for this period yet.</td></tr>';
+    });
+  });
 });
 </script>
 </div>

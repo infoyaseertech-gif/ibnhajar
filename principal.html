@@ -70,13 +70,8 @@
   <div class="panel">
     <h3>Students by Class</h3>
     <table class="dtable">
-      <thead><tr><th>Class</th><th>Class Teacher</th><th>Students</th></tr></thead>
-      <tbody>
-        <tr><td>Primary 1</td><td>[Teacher Name]</td><td>[ ]</td></tr>
-        <tr><td>Primary 4</td><td>[Teacher Name]</td><td>[ ]</td></tr>
-        <tr><td>JSS 1</td><td>[Teacher Name]</td><td>[ ]</td></tr>
-        <tr><td>JSS 3</td><td>[Teacher Name]</td><td>[ ]</td></tr>
-      </tbody>
+      <thead><tr><th>Student</th><th>Class</th><th>Gender</th><th>Admission No.</th></tr></thead>
+      <tbody id="pr-students-body"><tr><td colspan="4">Loading&hellip;</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -311,6 +306,14 @@ function renderUsersTable(){
 
 document.addEventListener('DOMContentLoaded', () => {
   renderUsersTable();
+
+  const prStudentsBody = document.getElementById('pr-students-body');
+  if(prStudentsBody){
+    const all = getStudents();
+    prStudentsBody.innerHTML = all.length ? all.map(s =>
+      `<tr><td>${s.name}</td><td>${s.class}</td><td>${s.gender||''}</td><td>${s.admissionNumber||''}</td></tr>`
+    ).join('') : '<tr><td colspan="4">No students yet.</td></tr>';
+  }
 
   const students = getStudents();
   const term = 'Term 1', session = CURRENT_SESSION;
