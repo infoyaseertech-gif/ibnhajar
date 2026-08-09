@@ -17,10 +17,10 @@
     <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
   </a>
   <div class="dash-role-tag" data-user-role>Parent</div>
-  <nav class="dash-nav">
-      <a class="active" href="#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
-      <a class="" href="#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results</span></a>
-      <a class="" href="#fees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span>Fees</span></a>
+  <nav class="dash-nav" id="dash-nav">
+      <a class="active" href="javascript:void(0)" data-nav-key="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
+      <a class="" href="javascript:void(0)" data-nav-key="results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results</span></a>
+      <a class="" href="javascript:void(0)" data-nav-key="fees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span>Fees</span></a>
   </nav>
   <div class="exit">
     <a href="account.html">Change password</a><br>
@@ -29,7 +29,7 @@
 </aside>
 <main class="dash-main">
 <div class="dash-topbar">
-  <h1>Parent Dashboard</h1>
+  <h1 id="dash-title">&hellip;</h1>
   <div class="dash-user">
     <span data-user-name>&hellip;</span>
     <div class="avatar" data-user-avatar>&middot;</div>
@@ -37,37 +37,41 @@
 </div>
 <div class="dash-content">
 
-<div class="child-card">
-  <div class="ph" id="child-initials">&hellip;</div>
-  <div>
-    <div style="font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); font-weight:700;">Your Child</div>
-    <h3 style="margin:2px 0 2px;" id="child-name">&hellip;</h3>
-    <p style="margin:0; font-size:.88rem;" id="child-class">&nbsp;</p>
+<div class="dash-section" data-key="dashboard">
+  <div class="child-card">
+    <div class="ph" id="child-initials">&hellip;</div>
+    <div>
+      <div style="font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); font-weight:700;">Your Child</div>
+      <h3 style="margin:2px 0 2px;" id="child-name">&hellip;</h3>
+      <p style="margin:0; font-size:.88rem;" id="child-class">&nbsp;</p>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>Quick Overview</h3>
+    <p>Use the menu on the left to view your child's academic record or fee status in detail.</p>
   </div>
 </div>
 
-<div class="dash-grid-2">
-  <div>
-    <div class="panel" id="results">
-      <h3>Academic Record &mdash; Full History</h3>
-      <p class="form-note" style="margin-top:-8px;">Every term recorded for your child, oldest to newest.</p>
-      <table class="dtable">
-        <thead><tr><th>Session</th><th>Term</th><th>Class</th><th>Subject</th><th>Grade</th></tr></thead>
-        <tbody id="parent-history-body"><tr><td colspan="5">Loading&hellip;</td></tr></tbody>
-      </table>
-    </div>
+<div class="dash-section" data-key="results" hidden>
+  <div class="panel">
+    <h3>Academic Record &mdash; Full History</h3>
+    <p class="form-note" style="margin-top:-8px;">Every term recorded for your child, oldest to newest.</p>
+    <table class="dtable">
+      <thead><tr><th>Session</th><th>Term</th><th>Class</th><th>Subject</th><th>Grade</th></tr></thead>
+      <tbody id="parent-history-body"><tr><td colspan="5">Loading&hellip;</td></tr></tbody>
+    </table>
   </div>
+</div>
 
-  <div>
-    <div class="panel" id="fees">
-      <h3>Fee Status &mdash; Term 1, 2026/2027</h3>
-      <div class="progress-row"><div class="top"><span>Paid so far</span><span id="fee-paid-label">&hellip;</span></div><div class="progress-bar"><div class="fill" id="fee-paid-bar" style="width:0%"></div></div></div>
-      <table class="dtable" style="margin-top:14px;">
-        <thead><tr><th>Fee Type</th><th>Status</th></tr></thead>
-        <tbody id="parent-fees-body"><tr><td colspan="2">Loading&hellip;</td></tr></tbody>
-      </table>
-      <p class="form-note" style="margin-top:12px;">Sample fee amounts shown &mdash; the school will confirm real figures for your child's class.</p>
-    </div>
+<div class="dash-section" data-key="fees" hidden>
+  <div class="panel">
+    <h3>Fee Status &mdash; Term 1, 2026/2027</h3>
+    <div class="progress-row"><div class="top"><span>Paid so far</span><span id="fee-paid-label">&hellip;</span></div><div class="progress-bar"><div class="fill" id="fee-paid-bar" style="width:0%"></div></div></div>
+    <table class="dtable" style="margin-top:14px;">
+      <thead><tr><th>Fee Type</th><th>Status</th></tr></thead>
+      <tbody id="parent-fees-body"><tr><td colspan="2">Loading&hellip;</td></tr></tbody>
+    </table>
+    <p class="form-note" style="margin-top:12px;">Sample fee amounts shown &mdash; the school will confirm real figures for your child's class.</p>
   </div>
 </div>
 
@@ -112,7 +116,35 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="script.js"></script>
 <script>
   const __user = requireRole(['Parent']);
-  if (__user) paintUser(__user);
+  if (__user) { paintUser(__user); window.__dashUser = __user; }
+</script>
+<script>
+(function(){
+  const user = window.__dashUser;
+  document.querySelectorAll('.dash-section[data-requires]').forEach(sec => {
+    if(!hasPermission(user, sec.getAttribute('data-requires'))) sec.remove();
+  });
+  document.querySelectorAll('#dash-nav a[data-nav-key]').forEach(link => {
+    const key = link.getAttribute('data-nav-key');
+    if(!document.querySelector('.dash-section[data-key="' + key + '"]')) link.remove();
+  });
+
+  function activate(key){
+    document.querySelectorAll('.dash-section').forEach(s => { s.hidden = (s.getAttribute('data-key') !== key); });
+    document.querySelectorAll('#dash-nav a[data-nav-key]').forEach(a => a.classList.toggle('active', a.getAttribute('data-nav-key') === key));
+    const activeLink = document.querySelector('#dash-nav a[data-nav-key="' + key + '"]');
+    const titleEl = document.getElementById('dash-title');
+    if(titleEl) titleEl.textContent = activeLink ? activeLink.querySelector('span').textContent : '';
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  }
+
+  document.querySelectorAll('#dash-nav a[data-nav-key]').forEach(link => {
+    link.addEventListener('click', () => activate(link.getAttribute('data-nav-key')));
+  });
+
+  const firstLink = document.querySelector('#dash-nav a[data-nav-key]');
+  if(firstLink) activate(firstLink.getAttribute('data-nav-key'));
+})();
 </script>
 </body>
 </html>

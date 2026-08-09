@@ -197,6 +197,54 @@ function countPendingApplications(){
 }
 
 // =========================================================================
+// GALLERY — Principal can add/remove images without limit. Uploaded images
+// are stored as data URLs in local storage for this demo; once Supabase is
+// connected these move to real file storage (Supabase Storage) automatically.
+// =========================================================================
+function getGalleryImages(){
+  try { return JSON.parse(localStorage.getItem('ihf_gallery')) || []; }
+  catch(e){ return []; }
+}
+function addGalleryImage(dataUrl, caption){
+  const list = getGalleryImages();
+  list.unshift({ id:'g'+Date.now(), dataUrl, caption: caption || '', addedAt: new Date().toISOString().slice(0,10) });
+  localStorage.setItem('ihf_gallery', JSON.stringify(list));
+}
+function removeGalleryImage(id){
+  const list = getGalleryImages().filter(g => g.id !== id);
+  localStorage.setItem('ihf_gallery', JSON.stringify(list));
+}
+
+// =========================================================================
+// ATTENDANCE — Class Teacher marks it, saved for real per date/class.
+// =========================================================================
+function getAttendanceRecords(){
+  try { return JSON.parse(localStorage.getItem('ihf_attendance')) || []; }
+  catch(e){ return []; }
+}
+function saveAttendance(className, date, entries){
+  // entries: [{studentId, studentName, status}]
+  const list = getAttendanceRecords().filter(r => !(r.className === className && r.date === date));
+  list.push({ className, date, entries });
+  localStorage.setItem('ihf_attendance', JSON.stringify(list));
+}
+function getAttendanceFor(className, date){
+  return getAttendanceRecords().find(r => r.className === className && r.date === date) || null;
+}
+
+// =========================================================================
+// SCHOOL INFO — editable by Admin, actually persists now.
+// =========================================================================
+const DEFAULT_SCHOOL_INFO = { name:'IBN HAJAR FOUNDATION-ZARIA', address:'No. 52 Unguwar Katuka, Zaria City', session:'2026/2027' };
+function getSchoolInfo(){
+  try { return { ...DEFAULT_SCHOOL_INFO, ...(JSON.parse(localStorage.getItem('ihf_school_info')) || {}) }; }
+  catch(e){ return DEFAULT_SCHOOL_INFO; }
+}
+function setSchoolInfo(info){
+  localStorage.setItem('ihf_school_info', JSON.stringify(info));
+}
+
+// =========================================================================
 // FEES — sample per-term amounts (replace with real figures from the school).
 // Recording a payment from Bursary actually updates balances everywhere.
 // =========================================================================

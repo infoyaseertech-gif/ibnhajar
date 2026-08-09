@@ -17,10 +17,10 @@
     <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
   </a>
   <div class="dash-role-tag" data-user-role>Class Teacher</div>
-  <nav class="dash-nav">
-      <a class="active" href="#class-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
-      <a class="" href="#attendance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg><span>Attendance</span></a>
-      <a class="" href="#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results Entry</span></a>
+  <nav class="dash-nav" id="dash-nav">
+      <a class="active" href="javascript:void(0)" data-nav-key="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
+      <a class="" href="javascript:void(0)" data-nav-key="attendance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg><span>Attendance</span></a>
+      <a class="" href="javascript:void(0)" data-nav-key="results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Results Entry</span></a>
   </nav>
   <div class="exit">
     <a href="account.html">Change password</a><br>
@@ -29,7 +29,7 @@
 </aside>
 <main class="dash-main">
 <div class="dash-topbar">
-  <h1>My Class</h1>
+  <h1 id="dash-title">&hellip;</h1>
   <div class="dash-user">
     <span data-user-name>&hellip;</span>
     <div class="avatar" data-user-avatar>&middot;</div>
@@ -37,68 +37,68 @@
 </div>
 <div class="dash-content">
 
-<div class="stat-cards">
-  <div class="stat-card-sm"><div class="num">Primary 4</div><div class="label">Your Assigned Class</div></div>
-  <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Students in Class</div></div>
-  <div class="stat-card-sm"><div class="num">Term 1</div><div class="label">Current Term</div></div>
-  <div class="stat-card-sm"><div class="num">In progress</div><div class="label">Results Status</div></div>
+<div class="dash-section" data-key="dashboard">
+  <div class="stat-cards">
+    <div class="stat-card-sm"><div class="num">Primary 4</div><div class="label">Your Assigned Class</div></div>
+    <div class="stat-card-sm"><div class="num">[ ]</div><div class="label">Students in Class</div></div>
+    <div class="stat-card-sm"><div class="num">Term 1</div><div class="label">Current Term</div></div>
+    <div class="stat-card-sm"><div class="num">In progress</div><div class="label">Results Status</div></div>
+  </div>
+  <div class="panel">
+    <h3 id="class-list-title">Class List</h3>
+    <table class="dtable">
+      <thead><tr><th>Student</th><th>Class</th></tr></thead>
+      <tbody id="class-list-body"><tr><td colspan="2">Loading&hellip;</td></tr></tbody>
+    </table>
+  </div>
 </div>
 
-<div class="panel" id="class-list">
-  <h3 id="class-list-title">Class List</h3>
-  <table class="dtable">
-    <thead><tr><th>Student</th><th>Class</th></tr></thead>
-    <tbody id="class-list-body"><tr><td colspan="2">Loading&hellip;</td></tr></tbody>
-  </table>
-</div>
-
-<div class="dash-grid-2">
-  <div>
-    <div class="panel" id="attendance" data-requires="markAttendance">
-      <h3>Mark Today's Attendance</h3>
-      <div class="attend-grid head"><span>Student</span><span>Present</span><span>Absent</span><span>Late</span></div>
-      <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a1" checked><input type="radio" name="a1"><input type="radio" name="a1"></div>
-      <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a2" checked><input type="radio" name="a2"><input type="radio" name="a2"></div>
-      <div class="attend-grid"><span>[Student Name]</span><input type="radio" name="a3" checked><input type="radio" name="a3"><input type="radio" name="a3"></div>
-      <button class="btn btn-navy" style="margin-top:16px;" onclick="alert('Demo only — attendance will save once connected.'); return false;">Save Attendance &rarr;</button>
+<div class="dash-section" data-key="attendance" data-requires="markAttendance" hidden>
+  <div class="panel">
+    <h3>Mark Attendance</h3>
+    <div class="form-grid" style="margin-bottom:16px; max-width:300px;">
+      <div><label for="att-date">Date</label><input id="att-date" type="date"></div>
     </div>
+    <div id="attendance-rows"></div>
+    <button class="btn btn-navy" id="save-attendance-btn" style="margin-top:16px;">Save Attendance &rarr;</button>
+    <p id="attendance-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+  </div>
+</div>
+
+<div class="dash-section" data-key="results" data-requires="enterResults" hidden>
+  <div class="panel">
+    <h3>Enter Results &mdash; Add Any Number of Subjects</h3>
+    <div class="form-grid" style="margin-bottom:18px;">
+      <div>
+        <label for="t-student">Student</label>
+        <select id="t-student"></select>
+      </div>
+      <div>
+        <label for="t-session">Session</label>
+        <input id="t-session" value="2026/2027">
+      </div>
+      <div>
+        <label for="t-term">Term</label>
+        <select id="t-term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
+      </div>
+    </div>
+
+    <div id="subject-rows" style="display:grid; gap:10px; margin-bottom:12px;"></div>
+    <button type="button" id="add-subject-row" class="btn btn-outline" style="border-color:rgba(14,27,54,.25); color:var(--navy-mid);">+ Add Another Subject</button>
+
+    <div style="margin-top:20px;">
+      <button type="button" id="save-results-btn" class="btn btn-gold">Save Results &rarr;</button>
+    </div>
+    <p id="results-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
   </div>
 
-  <div>
-    <div class="panel" id="results" data-requires="enterResults">
-      <h3>Enter Results &mdash; Add Any Number of Subjects</h3>
-      <div class="form-grid" style="margin-bottom:18px;">
-        <div>
-          <label for="t-student">Student</label>
-          <select id="t-student"></select>
-        </div>
-        <div>
-          <label for="t-session">Session</label>
-          <input id="t-session" value="2026/2027">
-        </div>
-        <div>
-          <label for="t-term">Term</label>
-          <select id="t-term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
-        </div>
-      </div>
-
-      <div id="subject-rows" style="display:grid; gap:10px; margin-bottom:12px;"></div>
-      <button type="button" id="add-subject-row" class="btn btn-outline" style="border-color:rgba(14,27,54,.25); color:var(--navy-mid);">+ Add Another Subject</button>
-
-      <div style="margin-top:20px;">
-        <button type="button" id="save-results-btn" class="btn btn-gold">Save Results &rarr;</button>
-      </div>
-      <p id="results-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
-    </div>
-
-    <div class="panel" id="student-history">
-      <h3>Full Academic Record &mdash; Selected Student</h3>
-      <p class="form-note" style="margin-top:-8px;">Every term ever entered for this student, across sessions and classes.</p>
-      <table class="dtable">
-        <thead><tr><th>Session</th><th>Term</th><th>Class</th><th>Subject</th><th>Grade</th></tr></thead>
-        <tbody id="history-table-body"><tr><td colspan="5">Select a student above.</td></tr></tbody>
-      </table>
-    </div>
+  <div class="panel">
+    <h3>Full Academic Record &mdash; Selected Student</h3>
+    <p class="form-note" style="margin-top:-8px;">Every term ever entered for this student, across sessions and classes.</p>
+    <table class="dtable">
+      <thead><tr><th>Session</th><th>Term</th><th>Class</th><th>Subject</th><th>Grade</th></tr></thead>
+      <tbody id="history-table-body"><tr><td colspan="5">Select a student above.</td></tr></tbody>
+    </table>
   </div>
 </div>
 
@@ -137,10 +137,6 @@ function renderStudentHistory(studentId){
 
 document.addEventListener('DOMContentLoaded', () => {
   const me = getCurrentUser();
-  document.querySelectorAll('[data-requires]').forEach(el => {
-    if(!hasPermission(me, el.getAttribute('data-requires'))) el.remove();
-  });
-
   const studentSel = document.getElementById('t-student');
   const myClass = me && me.assignedClass ? me.assignedClass : null;
   const students = myClass ? getStudentsForClass(myClass) : getStudents();
@@ -189,6 +185,42 @@ document.addEventListener('DOMContentLoaded', () => {
       : 'Enter at least one subject name before saving.';
     if(saved > 0) renderStudentHistory(student.id);
   });
+
+  // ---- Attendance: real, per date/class ----
+  const attDateInput = document.getElementById('att-date');
+  const attRows = document.getElementById('attendance-rows');
+  function renderAttendanceRows(){
+    if(!attRows) return;
+    const date = attDateInput.value || new Date().toISOString().slice(0,10);
+    attDateInput.value = date;
+    const existing = getAttendanceFor(myClass || '', date);
+    attRows.innerHTML = '<div class="attend-grid head"><span>Student</span><span>Present</span><span>Absent</span><span>Late</span></div>' +
+      students.map((s,i) => {
+        const prior = existing ? existing.entries.find(e => e.studentId === s.id) : null;
+        const status = prior ? prior.status : 'present';
+        return `<div class="attend-grid">
+          <span>${s.name}</span>
+          <input type="radio" name="att${i}" value="present" ${status==='present'?'checked':''}>
+          <input type="radio" name="att${i}" value="absent" ${status==='absent'?'checked':''}>
+          <input type="radio" name="att${i}" value="late" ${status==='late'?'checked':''}>
+        </div>`;
+      }).join('');
+  }
+  if(attRows){
+    renderAttendanceRows();
+    attDateInput.addEventListener('change', renderAttendanceRows);
+    document.getElementById('save-attendance-btn').addEventListener('click', () => {
+      const date = attDateInput.value;
+      const entries = students.map((s,i) => {
+        const checked = document.querySelector(`input[name="att${i}"]:checked`);
+        return { studentId: s.id, studentName: s.name, status: checked ? checked.value : 'present' };
+      });
+      saveAttendance(myClass || '', date, entries);
+      const status = document.getElementById('attendance-status');
+      status.hidden = false;
+      status.textContent = `Attendance saved for ${myClass || 'your class'} on ${date}.`;
+    });
+  }
 });
 </script>
 </div>
@@ -197,7 +229,35 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="script.js"></script>
 <script>
   const __user = requireRole(['Class Teacher']);
-  if (__user) paintUser(__user);
+  if (__user) { paintUser(__user); window.__dashUser = __user; }
+</script>
+<script>
+(function(){
+  const user = window.__dashUser;
+  document.querySelectorAll('.dash-section[data-requires]').forEach(sec => {
+    if(!hasPermission(user, sec.getAttribute('data-requires'))) sec.remove();
+  });
+  document.querySelectorAll('#dash-nav a[data-nav-key]').forEach(link => {
+    const key = link.getAttribute('data-nav-key');
+    if(!document.querySelector('.dash-section[data-key="' + key + '"]')) link.remove();
+  });
+
+  function activate(key){
+    document.querySelectorAll('.dash-section').forEach(s => { s.hidden = (s.getAttribute('data-key') !== key); });
+    document.querySelectorAll('#dash-nav a[data-nav-key]').forEach(a => a.classList.toggle('active', a.getAttribute('data-nav-key') === key));
+    const activeLink = document.querySelector('#dash-nav a[data-nav-key="' + key + '"]');
+    const titleEl = document.getElementById('dash-title');
+    if(titleEl) titleEl.textContent = activeLink ? activeLink.querySelector('span').textContent : '';
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  }
+
+  document.querySelectorAll('#dash-nav a[data-nav-key]').forEach(link => {
+    link.addEventListener('click', () => activate(link.getAttribute('data-nav-key')));
+  });
+
+  const firstLink = document.querySelector('#dash-nav a[data-nav-key]');
+  if(firstLink) activate(firstLink.getAttribute('data-nav-key'));
+})();
 </script>
 </body>
 </html>
