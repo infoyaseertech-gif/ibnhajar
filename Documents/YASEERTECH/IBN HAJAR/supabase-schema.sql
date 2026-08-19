@@ -64,6 +64,7 @@ create table students (
   guardian_address text,
   previous_school text,
   passport_photo_url text,
+  admission_number text unique,
   admission_date date default current_date,
   status student_status default 'active',
   created_at timestamptz default now()
@@ -99,6 +100,20 @@ create table results (
   unique (student_id, subject_id, term_id)         -- re-saving updates instead of duplicating
 );
 
+-- ---------- ATTENDANCE ----------
+create type attendance_status as enum ('present','absent','late');
+
+create table attendance (
+  id uuid primary key default uuid_generate_v4(),
+  student_id uuid references students(id) on delete cascade,
+  class_id uuid references classes(id),
+  date date not null,
+  status attendance_status not null,
+  marked_by uuid references profiles(id),
+  created_at timestamptz default now(),
+  unique (student_id, date)
+);
+
 -- ---------- FEES ----------
 create table fee_types (
   id uuid primary key default uuid_generate_v4(),
@@ -126,11 +141,30 @@ create table fee_payments (
   created_at timestamptz default now()
 );
 
+-- ---------- EXPENSES (institutional spending, separate from fee income) ----------
+create table expenses (
+  id uuid primary key default uuid_generate_v4(),
+  description text not null,
+  category text not null,
+  amount numeric(12,2) not null,
+  expense_date date default current_date,
+  recorded_by uuid references profiles(id),
+  created_at timestamptz default now()
+);
+
 -- ---------- ADMISSIONS ----------
 create type admission_status as enum ('pending','approved','rejected');
 
+create table applicant_accounts (
+  id uuid primary key references auth.users(id) on delete cascade,
+  full_name text not null,
+  phone text,
+  created_at timestamptz default now()
+);
+
 create table admissions_applications (
   id uuid primary key default uuid_generate_v4(),
+  applicant_id uuid references applicant_accounts(id),
   student_full_name text not null,
   date_of_birth date,
   gender text,
@@ -155,16 +189,34 @@ create table announcements (
   posted_at timestamptz default now()
 );
 
+-- ---------- SITE SETTINGS (homepage banner, school info) ----------
+create table site_settings (
+  key text primary key,
+  value text
+);
+
+-- ---------- GALLERY ----------
+create table gallery_images (
+  id uuid primary key default uuid_generate_v4(),
+  storage_path text not null,   -- Supabase Storage object path
+  caption text,
+  uploaded_by uuid references profiles(id),
+  created_at timestamptz default now()
+);
+
 -- =========================================================================
 -- ROW LEVEL SECURITY — each role only sees what it should
 -- =========================================================================
 alter table profiles enable row level security;
 alter table students enable row level security;
 alter table results enable row level security;
+alter table attendance enable row level security;
 alter table fee_payments enable row level security;
+alter table expenses enable row level security;
 alter table admissions_applications enable row level security;
 alter table announcements enable row level security;
 alter table parent_student_links enable row level security;
+alter table gallery_images enable row level security;
 
 -- Helper: current user's role
 create or replace function my_role() returns user_role as $$
@@ -181,17 +233,17 @@ create policy "principal reads all profiles" on profiles for select using (my_ro
 create policy "principal manages profiles" on profiles for all using (my_role() = 'principal');
 create policy "user updates own password fields" on profiles for update using (id = auth.uid());
 
--- STUDENTS: principal/admin/bursary see all; class_teacher sees only their class; parent sees only their linked child
+-- STUDENTS: principal/admin/bursary see all; class_teacher sees/manages only their class; parent sees only their linked child
 create policy "staff full read" on students for select using (my_role() in ('principal','admin','bursary'));
-create policy "teacher reads own class" on students for select using (
+create policy "principal admin manage students" on students for all using (my_role() in ('principal','admin'));
+create policy "teacher manages own class students" on students for all using (
   my_role() = 'class_teacher' and current_class_id = (select assigned_class_id from profiles where id = auth.uid())
 );
 create policy "parent reads own child" on students for select using (
   my_role() = 'parent' and id in (select student_id from parent_student_links where parent_id = auth.uid())
 );
-create policy "admin manages students" on students for all using (my_role() in ('principal','admin'));
 
--- RESULTS: teacher inserts/updates only for their class; principal/admin read all; parent reads only their child's
+-- RESULTS: teacher inserts/updates/deletes only for their class; principal/admin read all; parent reads only their child's
 create policy "principal admin read all results" on results for select using (my_role() in ('principal','admin'));
 create policy "teacher manages own class results" on results for all using (
   my_role() = 'class_teacher' and class_at_time_id = (select assigned_class_id from profiles where id = auth.uid())
@@ -200,20 +252,32 @@ create policy "parent reads child results" on results for select using (
   my_role() = 'parent' and student_id in (select student_id from parent_student_links where parent_id = auth.uid())
 );
 
--- FEES: bursary/principal manage & read all; parent reads only their child's payments
+-- ATTENDANCE: teacher manages their own class only; principal/admin read all
+create policy "teacher manages own class attendance" on attendance for all using (
+  my_role() = 'class_teacher' and class_id = (select assigned_class_id from profiles where id = auth.uid())
+);
+create policy "principal admin read attendance" on attendance for select using (my_role() in ('principal','admin'));
+
+-- FEES & EXPENSES: bursary/principal manage & read all; parent reads only their child's payments
 create policy "bursary principal manage fees" on fee_payments for all using (my_role() in ('principal','bursary'));
 create policy "parent reads child fees" on fee_payments for select using (
   my_role() = 'parent' and student_id in (select student_id from parent_student_links where parent_id = auth.uid())
 );
+create policy "bursary principal manage expenses" on expenses for all using (my_role() in ('principal','bursary'));
 
--- ADMISSIONS: public (anon) can submit; only admin/principal can read & review
-create policy "anyone can submit application" on admissions_applications for insert with check (true);
+-- ADMISSIONS: applicants manage only their own submissions; admin/principal read & review all
+create policy "applicant manages own applications" on admissions_applications for all using (applicant_id = auth.uid());
 create policy "admin principal read applications" on admissions_applications for select using (my_role() in ('principal','admin'));
 create policy "admin principal review applications" on admissions_applications for update using (my_role() in ('principal','admin'));
+create policy "admin principal delete applications" on admissions_applications for delete using (my_role() in ('principal','admin'));
 
--- ANNOUNCEMENTS: everyone signed in can read; admin/principal can post
-create policy "everyone reads announcements" on announcements for select using (auth.uid() is not null);
-create policy "admin principal post announcements" on announcements for insert with check (my_role() in ('principal','admin'));
+-- ANNOUNCEMENTS: everyone reads; admin/principal post and delete
+create policy "everyone reads announcements" on announcements for select using (true);
+create policy "admin principal manage announcements" on announcements for all using (my_role() in ('principal','admin'));
+
+-- GALLERY: everyone reads; principal manages (add/remove) without limit
+create policy "everyone reads gallery" on gallery_images for select using (true);
+create policy "principal manages gallery" on gallery_images for all using (my_role() = 'principal');
 
 -- =========================================================================
 -- SEED DATA
@@ -225,6 +289,13 @@ insert into classes (name, level) values
   ('JSS 1','JSS'),('JSS 2','JSS'),('JSS 3','JSS');
 insert into fee_types (name) values
   ('Tuition'),('Security'),('Hostel'),('Hygiene'),('Feeding'),('Textbooks'),('Uniform');
+insert into site_settings (key, value) values
+  ('homepage_banner', 'Admission Now Open — 2026/2027 Session. Enrol your child in our Qur''an memorization & academic boarding programme. <a href="apply.html">Apply today →</a>'),
+  ('school_name', 'IBN HAJAR FOUNDATION-ZARIA'),
+  ('school_address', 'No. 52 Unguwar Katuka, Zaria City'),
+  ('current_session', '2026/2027');
 
--- Note: staff/parent accounts (profiles) are created through Supabase Auth (sign-up),
--- not inserted directly here — the app's "Create Account" screen handles that once wired up.
+-- Note: staff/parent/applicant accounts are created through Supabase Auth
+-- (sign-up), not inserted directly here — the app's account-creation screens
+-- handle that once wired up. Storage buckets (for gallery photos and
+-- passport photographs) are created separately in the Supabase Storage tab.

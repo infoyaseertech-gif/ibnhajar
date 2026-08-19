@@ -11,9 +11,17 @@
 <script src="records.js"></script>
 </head>
 <body>
-<div class="announce">
-  <strong>Admission Now Open — 2026/2027 Session.</strong> Enrol your child in our Qur'an memorization &amp; academic boarding programme. <a href="admissions.html">Apply today &rarr;</a>
-</div>
+<div class="announce" id="site-banner" hidden></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const el = document.getElementById('site-banner');
+  const text = getSiteBanner();
+  if(text && text.trim()){
+    el.innerHTML = text;
+    el.hidden = false;
+  }
+});
+</script>
 <header class="site">
   <div class="nav-row">
     <a class="brand" href="index.html">
@@ -33,7 +41,6 @@
       <a class="" href="gallery.html">Gallery</a>
       <a class="" href="contact.html">Contact</a>
       <a class="nav-portal" href="portal.html">Staff &amp; Parent Login</a>
-      <a class="nav-cta" href="admissions.html">Apply Now</a>
     </nav>
     <button class="nav-toggle" aria-label="Toggle menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -44,104 +51,159 @@
 <div class="page-header">
   <div class="wrap">
     <div class="crumb"><a href="index.html">Home</a> / Portal</div>
-    <h1>School Management Portal</h1>
-    <p style="color:rgba(255,255,255,.75); max-width:60ch; margin:0;">Secure sign-in for staff and parents. This portal is being connected to our live database &mdash; see note below.</p>
+    <h1>Portal Login</h1>
+    <p style="color:rgba(255,255,255,.75); max-width:60ch; margin:0;">Sign in to your dashboard, or register as a parent below.</p>
   </div>
 </div>
 
 <section class="tight">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span class="star">★</span> STAFF ACCESS</div>
-      <h2>Sign in by role</h2>
+  <div class="wrap" style="max-width:520px;">
+
+    <div class="card" style="padding:36px 32px;">
+      <div id="tab-buttons" style="display:flex; gap:8px; margin-bottom:28px; background:var(--cream-dim); padding:4px; border-radius:6px;">
+        <button type="button" class="tab-btn active" data-tab="signin" style="flex:1; padding:10px; border:none; border-radius:4px; font-weight:700; font-size:.85rem; cursor:pointer; background:var(--navy-deep); color:#fff;">Sign In</button>
+        <button type="button" class="tab-btn" data-tab="register" style="flex:1; padding:10px; border:none; border-radius:4px; font-weight:700; font-size:.85rem; cursor:pointer; background:transparent; color:var(--navy-deep);">Parent — Register</button>
+      </div>
+
+      <div id="panel-signin">
+        <div style="text-align:center; margin-bottom:24px;">
+          <div style="width:52px; height:52px; border-radius:50%; background:var(--cream-dim); display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--navy-deep)" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+          </div>
+          <h2 style="font-size:1.3rem; margin:0;">Welcome back</h2>
+          <p style="margin:4px 0 0; font-size:.85rem;">Principal, Admin, Bursary, Class Teacher or Parent</p>
+        </div>
+        <form id="login-form">
+          <div style="display:grid; gap:18px;">
+            <div>
+              <label for="login-username">Username</label>
+              <input id="login-username" type="text" required autocomplete="username">
+            </div>
+            <div>
+              <label for="login-pass">Password</label>
+              <input id="login-pass" type="password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-navy" style="justify-content:center;">Sign In</button>
+          </div>
+        </form>
+        <p id="login-status" role="status" hidden style="margin-top:16px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+        <p style="text-align:center; margin-top:18px;">
+          <a href="javascript:void(0)" id="show-forgot" style="font-size:.85rem; color:var(--navy-mid); font-weight:600;">Forgot your password?</a>
+        </p>
+
+        <div id="forgot-panel" hidden style="margin-top:20px; padding-top:22px; border-top:1px solid rgba(14,27,54,.08);">
+          <h3 style="font-size:1rem;">Reset your password</h3>
+          <p class="form-note" style="margin-top:-6px;">Staff accounts (Principal, Admin, Bursary, Class Teacher) are reset by the Principal — contact the school office. Parents can reset instantly below using their child's details.</p>
+          <div style="display:grid; gap:14px; margin-top:14px;">
+            <div><label for="fg-username">Your Username</label><input id="fg-username"></div>
+            <div><label for="fg-student">Student's Full Name</label><input id="fg-student"></div>
+            <div><label for="fg-admno">Student's Admission Number</label><input id="fg-admno"></div>
+            <div><label for="fg-newpass">New Password</label><input id="fg-newpass" type="password"></div>
+            <button type="button" id="fg-submit" class="btn btn-gold">Reset Password &rarr;</button>
+          </div>
+          <p id="fg-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+        </div>
+      </div>
+
+      <div id="panel-register" hidden>
+        <div style="text-align:center; margin-bottom:24px;">
+          <div style="width:52px; height:52px; border-radius:50%; background:var(--cream-dim); display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--navy-deep)" stroke-width="1.8"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+          </div>
+          <h2 style="font-size:1.3rem; margin:0;">Register as a Parent</h2>
+          <p style="margin:4px 0 0; font-size:.85rem;">You'll need your child's exact admission number to verify.</p>
+        </div>
+        <form id="register-form">
+          <div style="display:grid; gap:16px;">
+            <div><label for="rg-name">Your Full Name</label><input id="rg-name" required></div>
+            <div><label for="rg-username">Choose a Username</label><input id="rg-username" required></div>
+            <div><label for="rg-password">Choose a Password</label><input id="rg-password" type="password" required minlength="6"></div>
+            <div style="border-top:1px solid rgba(14,27,54,.08); padding-top:16px;">
+              <label for="rg-student">Student's Full Name</label>
+              <input id="rg-student" required placeholder="Exactly as given at admission">
+            </div>
+            <div><label for="rg-class">Student's Class</label>
+              <select id="rg-class" required>
+                <option value="">Select</option>
+                <option>Primary 1</option><option>Primary 2</option><option>Primary 3</option>
+                <option>Primary 4</option><option>Primary 5</option><option>Primary 6</option>
+                <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+              </select>
+            </div>
+            <div><label for="rg-admno">Student's Admission Number</label><input id="rg-admno" required placeholder="e.g. IHF/2024/001"></div>
+            <button type="submit" class="btn btn-gold" style="justify-content:center;">Create Parent Account &rarr;</button>
+          </div>
+        </form>
+        <p id="register-status" role="status" hidden style="margin-top:16px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+      </div>
     </div>
-    <div class="portal-grid">
-      <div class="portal-card">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l9 4.5v6c0 5-3.8 8.7-9 9.5-5.2-.8-9-4.5-9-9.5v-6z"/></svg></div>
-        <h4>Principal</h4>
-        <p>Full access &mdash; students, staff, fees, results &amp; admissions.</p>
-        <a href="#login" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
-      </div>
-      <div class="portal-card">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V6a2 2 0 012-2h8l6 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg></div>
-        <h4>Class Teacher</h4>
-        <p>Manage your class list, attendance and student results.</p>
-        <a href="#login" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
-      </div>
-      <div class="portal-card">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div>
-        <h4>Admin</h4>
-        <p>Manage records, admissions and school announcements.</p>
-        <a href="#login" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
-      </div>
-      <div class="portal-card">
-        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></div>
-        <h4>Bursary</h4>
-        <p>Record payments, view balances and generate fee reports.</p>
-        <a href="#login" class="btn btn-navy" style="width:100%; justify-content:center;">Sign In</a>
-      </div>
-    </div>
+
+    <p class="form-note" style="text-align:center; margin-top:20px;">Principal, Admin, Bursary and Class Teacher accounts are created by the school Principal — speak with the school office if you need one.</p>
   </div>
 </section>
 
-<section class="bg-dim tight">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span class="star">★</span> FAMILIES</div>
-      <h2>Parent Portal</h2>
-    </div>
-    <div class="split">
-      <div>
-        <p>Parents and guardians can sign in to view their child's:</p>
-        <ul class="list-check">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Academic results, graded Excellent / Good / Fair</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Fee payment status and outstanding balance</li>
-        </ul>
-        <p class="form-note">Each parent account is linked only to their own child's records for privacy.</p>
-      </div>
-      <a href="#login" class="btn btn-gold" style="justify-self:start;">Parent Sign In &rarr;</a>
-    </div>
-  </div>
-</section>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.style.background='transparent'; b.style.color='var(--navy-deep)'; });
+      btn.classList.add('active'); btn.style.background='var(--navy-deep)'; btn.style.color='#fff';
+      const tab = btn.getAttribute('data-tab');
+      document.getElementById('panel-signin').hidden = tab !== 'signin';
+      document.getElementById('panel-register').hidden = tab !== 'register';
+    });
+  });
 
-<section id="login">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span class="star">★</span> SIGN IN</div>
-      <h2>Portal login</h2>
-    </div>
-    <form id="login-form" class="card" style="max-width:420px;">
-      <div style="display:grid; gap:18px;">
-        <div>
-          <label for="login-username">Username</label>
-          <input id="login-username" type="text" required placeholder="e.g. principal">
-        </div>
-        <div>
-          <label for="login-pass">Password</label>
-          <input id="login-pass" type="password" required>
-        </div>
-        <button type="submit" class="btn btn-navy" style="justify-content:center;">Sign In</button>
-      </div>
-      <p id="login-status" role="status" hidden style="margin-top:16px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
-    </form>
-    <script>
-      document.getElementById('login-form').addEventListener('submit', function(e){
-        e.preventDefault();
-        const username = document.getElementById('login-username').value.trim();
-        const pass = document.getElementById('login-pass').value;
-        const result = login(username, pass);
-        const status = document.getElementById('login-status');
-        status.hidden = false;
-        if(result.ok){
-          status.textContent = 'Signed in — redirecting...';
-          window.location.href = ROLE_PAGE[result.user.role];
-        } else {
-          status.textContent = result.msg;
-        }
-      });
-    </script>
-  </div>
-</section>
+  document.getElementById('login-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    const username = document.getElementById('login-username').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const result = login(username, pass);
+    const status = document.getElementById('login-status');
+    status.hidden = false;
+    if(result.ok){
+      status.textContent = 'Signed in — redirecting...';
+      window.location.href = ROLE_PAGE[result.user.role];
+    } else {
+      status.textContent = result.msg;
+    }
+  });
+
+  document.getElementById('show-forgot').addEventListener('click', () => {
+    const p = document.getElementById('forgot-panel');
+    p.hidden = !p.hidden;
+  });
+  document.getElementById('fg-submit').addEventListener('click', () => {
+    const result = recoverParentPassword({
+      username: document.getElementById('fg-username').value.trim(),
+      studentName: document.getElementById('fg-student').value.trim(),
+      admissionNumber: document.getElementById('fg-admno').value.trim(),
+      newPassword: document.getElementById('fg-newpass').value
+    });
+    const status = document.getElementById('fg-status');
+    status.hidden = false;
+    status.textContent = result.ok ? 'Password reset — you can sign in now with your new password.' : result.msg;
+  });
+
+  document.getElementById('register-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    const result = registerParent({
+      parentName: document.getElementById('rg-name').value.trim(),
+      username: document.getElementById('rg-username').value.trim(),
+      password: document.getElementById('rg-password').value,
+      studentName: document.getElementById('rg-student').value.trim(),
+      studentClass: document.getElementById('rg-class').value,
+      admissionNumber: document.getElementById('rg-admno').value.trim()
+    });
+    const status = document.getElementById('register-status');
+    status.hidden = false;
+    status.textContent = result.ok
+      ? 'Account created — you can now sign in from the Sign In tab.'
+      : result.msg;
+    if(result.ok) document.getElementById('register-form').reset();
+  });
+});
+</script>
 <footer class="site">
   <div class="wrap">
     <div class="footer-grid">
@@ -150,7 +212,7 @@
           <img src="logo.svg" alt="Ibn Hajar Foundation-Zaria crest">
           <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
         </div>
-        <p style="color:rgba(255,255,255,.6); font-size:.88rem; max-width:32ch;">An Islamic boarding school for Qur'an memorization, Tajweed, Islamic studies and conventional academics — Primary &amp; Junior Secondary.</p>
+        <p style="color:rgba(255,255,255,.6); font-size:.88rem; max-width:32ch;">An Islamic boarding school dedicated to Qur'an memorization, Tajweed, Islamic Studies, and quality conventional education for Primary and Junior Secondary students.</p>
         <div style="display:flex; gap:12px; margin-top:16px;">
           <a href="#" aria-label="Facebook" style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.5 9.9v-7H7.9V12h2.6V9.8c0-2.6 1.5-4 3.9-4 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v7A10 10 0 0022 12z"/></svg></a>
           <a href="#" aria-label="Instagram" style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>

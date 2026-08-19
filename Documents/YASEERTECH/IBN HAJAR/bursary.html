@@ -17,11 +17,12 @@
     <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
   </a>
   <div class="dash-role-tag" data-user-role>Bursary</div>
-  <nav class="dash-nav">
-      <a class="active" href="#record-payment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
-      <a class="" href="#record-payment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>Record Payment</span></a>
-      <a class="" href="#balances"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span>Balances</span></a>
-      <a class="" href="#reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V6a2 2 0 012-2h8l6 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 13h6M9 17h6"/></svg><span>Reports</span></a>
+  <nav class="dash-nav" id="dash-nav">
+      <a class="active" href="javascript:void(0)" data-nav-key="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></a>
+      <a class="" href="javascript:void(0)" data-nav-key="payment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>Record Payment</span></a>
+      <a class="" href="javascript:void(0)" data-nav-key="expenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Expenses</span></a>
+      <a class="" href="javascript:void(0)" data-nav-key="fees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg><span>Pending/Balances</span></a>
+      <a class="" href="javascript:void(0)" data-nav-key="report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V6a2 2 0 012-2h8l6 6v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 13h6M9 17h6"/></svg><span>Financial Overview</span></a>
   </nav>
   <div class="exit">
     <a href="account.html">Change password</a><br>
@@ -30,7 +31,7 @@
 </aside>
 <main class="dash-main">
 <div class="dash-topbar">
-  <h1>Bursary Dashboard</h1>
+  <h1 id="dash-title">&hellip;</h1>
   <div class="dash-user">
     <span data-user-name>&hellip;</span>
     <div class="avatar" data-user-avatar>&middot;</div>
@@ -38,50 +39,92 @@
 </div>
 <div class="dash-content">
 
-<div class="demo-banner">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
-  <div><strong>Demo preview</strong> &mdash; this actually records and calculates in real time (stored in this browser for now). Fee amounts shown are sample figures &mdash; send the real ones and I'll update them.</div>
+<div class="dash-section" data-key="dashboard">
+  <p class="form-note" style="margin-bottom:20px;">Fee amounts and expense figures shown are sample data &mdash; send the real ones and they'll be updated.</p>
+  <div class="stat-cards" id="fee-stats">
+    <div class="stat-card-sm"><div class="num" id="stat-income">&hellip;</div><div class="label">Total Income (Fees)</div></div>
+    <div class="stat-card-sm"><div class="num" id="stat-expenses">&hellip;</div><div class="label">Total Expenses</div></div>
+    <div class="stat-card-sm"><div class="num" id="stat-net">&hellip;</div><div class="label">Net Financial Position</div></div>
+    <div class="stat-card-sm"><div class="num" id="stat-outstanding">&hellip;</div><div class="label">Outstanding Balance</div></div>
+  </div>
 </div>
 
-<div class="stat-cards" id="fee-stats">
-  <div class="stat-card-sm"><div class="num" id="stat-collected">&hellip;</div><div class="label">Collected This Term</div></div>
-  <div class="stat-card-sm"><div class="num" id="stat-outstanding">&hellip;</div><div class="label">Outstanding Balance</div></div>
-  <div class="stat-card-sm"><div class="num" id="stat-paid-count">&hellip;</div><div class="label">Students Fully Paid</div></div>
-  <div class="stat-card-sm"><div class="num" id="stat-owing-count">&hellip;</div><div class="label">Students Owing</div></div>
-</div>
-
-<div class="panel" id="record-payment">
-  <h3>Record a Payment</h3>
-  <form id="payment-form" class="form-inline">
-    <div class="field"><label for="b-student">Student</label><select id="b-student"></select></div>
-    <div class="field"><label for="b-type">Fee Type</label>
-      <select id="b-type"><option>Tuition</option><option>Security</option><option>Hostel</option><option>Hygiene</option><option>Feeding</option><option>Textbooks</option><option>Uniform</option></select>
-    </div>
-    <div class="field"><label for="b-amount">Amount (&#8358;)</label><input id="b-amount" type="number" placeholder="0.00" required></div>
-    <div class="field"><label for="b-term">Term</label><select id="b-term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select></div>
-    <button type="submit" class="btn btn-gold">Record Payment &rarr;</button>
-  </form>
-  <p id="payment-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
-</div>
-
-<div class="dash-grid-2">
-  <div>
-    <div class="panel" id="balances">
-      <h3>Outstanding Balances &mdash; Term 1, 2026/2027</h3>
-      <table class="dtable">
-        <thead><tr><th>Student</th><th>Class</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead>
-        <tbody id="balances-body"><tr><td colspan="5">Loading&hellip;</td></tr></tbody>
-      </table>
-    </div>
+<div class="dash-section" data-key="payment" data-requires="recordPayments" hidden>
+  <div class="panel">
+    <h3>Record a Payment</h3>
+    <form id="payment-form" class="form-inline">
+      <div class="field"><label for="b-student">Student</label><select id="b-student"></select></div>
+      <div class="field"><label for="b-type">Fee Type</label>
+        <select id="b-type"><option>Tuition</option><option>Security</option><option>Hostel</option><option>Hygiene</option><option>Feeding</option><option>Textbooks</option><option>Uniform</option></select>
+      </div>
+      <div class="field"><label for="b-amount">Amount (&#8358;)</label><input id="b-amount" type="number" placeholder="0.00" required></div>
+      <div class="field"><label for="b-term">Term</label><select id="b-term"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select></div>
+      <button type="submit" class="btn btn-gold">Record Payment &rarr;</button>
+    </form>
+    <p id="payment-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
   </div>
 
-  <div>
-    <div class="panel" id="reports">
-      <h3>Fee Collection by Class</h3>
-      <div class="progress-row"><div class="top"><span>Primary 1&ndash;3</span><span>72%</span></div><div class="progress-bar"><div class="fill" style="width:72%"></div></div></div>
-      <div class="progress-row"><div class="top"><span>Primary 4&ndash;6</span><span>64%</span></div><div class="progress-bar"><div class="fill" style="width:64%"></div></div></div>
-      <div class="progress-row"><div class="top"><span>JSS 1&ndash;3</span><span>58%</span></div><div class="progress-bar"><div class="fill" style="width:58%"></div></div></div>
-      <button class="btn btn-navy" style="margin-top:6px;" onclick="alert('Demo only — a downloadable report will generate once Supabase is connected.'); return false;">Export Report &rarr;</button>
+  <div class="panel">
+    <h3>Recent Payments</h3>
+    <table class="dtable">
+      <thead><tr><th>Student</th><th>Fee Type</th><th>Amount</th><th>Term</th><th>Date</th><th></th></tr></thead>
+      <tbody id="payments-body"><tr><td colspan="6">Loading&hellip;</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="dash-section" data-key="expenses" data-requires="recordPayments" hidden>
+  <div class="panel">
+    <h3>Record an Expense</h3>
+    <form id="expense-form" class="form-inline">
+      <div class="field full" style="grid-column:1/-1;"><label for="ex-desc">Description</label><input id="ex-desc" required placeholder="e.g. Rice and provisions — October"></div>
+      <div class="field"><label for="ex-category">Category</label><select id="ex-category"></select></div>
+      <div class="field"><label for="ex-amount">Amount (&#8358;)</label><input id="ex-amount" type="number" placeholder="0.00" required></div>
+      <div class="field"><label for="ex-date">Date</label><input id="ex-date" type="date"></div>
+      <button type="submit" class="btn btn-gold">Record Expense &rarr;</button>
+    </form>
+    <p id="expense-status" role="status" hidden style="margin-top:14px; padding:12px 16px; background:var(--cream-dim); border-left:3px solid var(--gold); font-size:.88rem; color:var(--navy-deep);"></p>
+  </div>
+
+  <div class="panel">
+    <h3>All Expenses</h3>
+    <table class="dtable">
+      <thead><tr><th>Description</th><th>Category</th><th>Amount</th><th>Date</th><th></th></tr></thead>
+      <tbody id="expenses-body"><tr><td colspan="5">Loading&hellip;</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="dash-section" data-key="fees" hidden>
+  <div class="panel">
+    <h3>Pending &amp; Outstanding Balances &mdash; Term 1, 2026/2027</h3>
+    <table class="dtable">
+      <thead><tr><th>Student</th><th>Class</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead>
+      <tbody id="balances-body"><tr><td colspan="5">Loading&hellip;</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="dash-section" data-key="report" data-requires="viewReports" hidden>
+  <div class="panel">
+    <h3>Institution Financial Overview</h3>
+    <p class="form-note" style="margin-top:-8px;">Full financial status &mdash; income from fees against everything spent.</p>
+    <div class="stat-cards" style="margin-top:16px;">
+      <div class="stat-card-sm"><div class="num" id="rep-income">&hellip;</div><div class="label">Total Income</div></div>
+      <div class="stat-card-sm"><div class="num" id="rep-expenses">&hellip;</div><div class="label">Total Expenses</div></div>
+      <div class="stat-card-sm"><div class="num" id="rep-net">&hellip;</div><div class="label">Net Position</div></div>
+    </div>
+    <h4 style="margin:24px 0 12px; font-family:var(--font-display); font-size:1rem; color:var(--navy-deep);">Expenses by Category</h4>
+    <div id="rep-category-bars"></div>
+  </div>
+  <div class="panel">
+    <h3>Fee Collection by Class</h3>
+    <div class="progress-row"><div class="top"><span>Primary 1&ndash;3</span><span>72%</span></div><div class="progress-bar"><div class="fill" style="width:72%"></div></div></div>
+    <div class="progress-row"><div class="top"><span>Primary 4&ndash;6</span><span>64%</span></div><div class="progress-bar"><div class="fill" style="width:64%"></div></div></div>
+    <div class="progress-row"><div class="top"><span>JSS 1&ndash;3</span><span>58%</span></div><div class="progress-bar"><div class="fill" style="width:58%"></div></div></div>
+    <div style="display:flex; gap:10px; margin-top:14px;">
+      <button class="btn btn-navy" id="export-fees-btn">Export Fee Report (CSV) &rarr;</button>
+      <button class="btn btn-outline" id="export-expenses-btn" style="border-color:rgba(14,27,54,.25); color:var(--navy-mid);">Export Expenses (CSV) &rarr;</button>
     </div>
   </div>
 </div>
@@ -90,33 +133,107 @@
 function refreshBursary(){
   const students = getStudents();
   const term = 'Term 1', session = CURRENT_SESSION;
-  let collected = 0, outstanding = 0, paidCount = 0, owingCount = 0;
+  let collected = 0, outstanding = 0;
   const rows = students.map(s => {
     const paid = getTotalPaid(s.id, term, session);
     const bal = getBalance(s.id, term, session);
     const status = getPaymentStatus(s.id, term, session);
     collected += paid; outstanding += bal;
-    if(status === 'paid') paidCount++;
-    if(status === 'owing') owingCount++;
     const pillClass = status === 'paid' ? 'pill-paid' : status === 'partial' ? 'pill-partial' : 'pill-owing';
     const label = status === 'paid' ? 'Fully Paid' : status === 'partial' ? 'Partial' : 'Owing';
     return `<tr><td>${s.name}</td><td>${s.class}</td><td>${formatNaira(paid)}</td><td>${formatNaira(bal)}</td><td><span class="pill ${pillClass}">${label}</span></td></tr>`;
   });
-  document.getElementById('balances-body').innerHTML = rows.join('');
-  document.getElementById('stat-collected').textContent = formatNaira(collected);
-  document.getElementById('stat-outstanding').textContent = formatNaira(outstanding);
-  document.getElementById('stat-paid-count').textContent = paidCount;
-  document.getElementById('stat-owing-count').textContent = owingCount;
+  const balBody = document.getElementById('balances-body');
+  if(balBody) balBody.innerHTML = rows.join('');
+
+  const income = getTotalIncome();
+  const expenses = getTotalExpenses();
+  const net = income - expenses;
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  set('stat-income', formatNaira(income));
+  set('stat-expenses', formatNaira(expenses));
+  set('stat-net', formatNaira(net));
+  set('stat-outstanding', formatNaira(outstanding));
+  set('rep-income', formatNaira(income));
+  set('rep-expenses', formatNaira(expenses));
+  set('rep-net', formatNaira(net));
+
+  const catBars = document.getElementById('rep-category-bars');
+  if(catBars){
+    const byCategory = getExpensesByCategory();
+    const total = Object.values(byCategory).reduce((a,b)=>a+b,0) || 1;
+    catBars.innerHTML = Object.keys(byCategory).length
+      ? Object.entries(byCategory).map(([cat,amt]) => {
+          const pct = Math.round((amt/total)*100);
+          return `<div class="progress-row"><div class="top"><span>${cat}</span><span>${formatNaira(amt)} (${pct}%)</span></div><div class="progress-bar"><div class="fill" style="width:${pct}%"></div></div></div>`;
+        }).join('')
+      : '<p class="form-note">No expenses recorded yet.</p>';
+  }
+
+  renderPayments();
+  renderExpenses();
+}
+
+function renderPayments(){
+  const body = document.getElementById('payments-body');
+  if(!body) return;
+  const payments = getPayments().slice().sort((a,b) => b.date.localeCompare(a.date));
+  body.innerHTML = payments.length ? payments.map(p => `
+    <tr><td>${p.studentName}</td><td>${p.feeType}</td><td>${formatNaira(p.amount)}</td><td>${p.term}</td><td>${p.date}</td>
+      <td style="white-space:nowrap;"><button class="btn-xs btn-view" data-pay-edit="${p.id}">Edit</button> <button class="btn-xs btn-reject" data-pay-remove="${p.id}">Remove</button></td></tr>
+  `).join('') : '<tr><td colspan="6">No payments recorded yet.</td></tr>';
+  body.querySelectorAll('[data-pay-edit]').forEach(b => b.addEventListener('click', () => {
+    const p = getPayments().find(x => x.id === b.getAttribute('data-pay-edit'));
+    if(!p) return;
+    const newAmount = prompt('New amount for this payment:', p.amount);
+    if(newAmount !== null && !isNaN(newAmount) && newAmount !== ''){
+      updatePayment(p.id, { amount: newAmount });
+      refreshBursary();
+    }
+  }));
+  body.querySelectorAll('[data-pay-remove]').forEach(b => b.addEventListener('click', () => {
+    if(confirm('Remove this payment record?')){ removePayment(b.getAttribute('data-pay-remove')); refreshBursary(); }
+  }));
+}
+
+function renderExpenses(){
+  const body = document.getElementById('expenses-body');
+  if(!body) return;
+  const expenses = getExpenses();
+  body.innerHTML = expenses.length ? expenses.map(e => `
+    <tr><td>${e.description}</td><td>${e.category}</td><td>${formatNaira(e.amount)}</td><td>${e.date}</td>
+      <td style="white-space:nowrap;"><button class="btn-xs btn-view" data-ex-edit="${e.id}">Edit</button> <button class="btn-xs btn-reject" data-ex-remove="${e.id}">Remove</button></td></tr>
+  `).join('') : '<tr><td colspan="5">No expenses recorded yet.</td></tr>';
+  body.querySelectorAll('[data-ex-edit]').forEach(b => b.addEventListener('click', () => {
+    const e = getExpenses().find(x => x.id === b.getAttribute('data-ex-edit'));
+    if(!e) return;
+    const newAmount = prompt('New amount for this expense:', e.amount);
+    if(newAmount !== null && !isNaN(newAmount) && newAmount !== ''){
+      updateExpense(e.id, { amount: newAmount });
+      refreshBursary();
+    }
+  }));
+  body.querySelectorAll('[data-ex-remove]').forEach(b => b.addEventListener('click', () => {
+    if(confirm('Remove this expense record?')){ removeExpense(b.getAttribute('data-ex-remove')); refreshBursary(); }
+  }));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const me = getCurrentUser();
   const students = getStudents();
-  document.getElementById('b-student').innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
+  const studentSel = document.getElementById('b-student');
+  if(studentSel) studentSel.innerHTML = students.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('');
+
+  const catSel = document.getElementById('ex-category');
+  if(catSel) catSel.innerHTML = EXPENSE_CATEGORIES.map(c => `<option>${c}</option>`).join('');
+  const exDate = document.getElementById('ex-date');
+  if(exDate) exDate.value = new Date().toISOString().slice(0,10);
+
   refreshBursary();
 
-  document.getElementById('payment-form').addEventListener('submit', (e) => {
+  const paymentForm = document.getElementById('payment-form');
+  if(paymentForm) paymentForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const me = getCurrentUser();
     const studentId = document.getElementById('b-student').value;
     const student = students.find(s => s.id === studentId);
     const feeType = document.getElementById('b-type').value;
@@ -125,10 +242,59 @@ document.addEventListener('DOMContentLoaded', () => {
     recordPayment({ studentId, studentName: student.name, feeType, amount, term, session: CURRENT_SESSION, recordedBy: me ? me.name : 'Bursary' });
     const status = document.getElementById('payment-status');
     status.hidden = false;
-    status.textContent = `Recorded ${formatNaira(amount)} (${feeType}) for ${student.name} — balances updated below.`;
-    document.getElementById('payment-form').reset();
+    status.textContent = `Recorded ${formatNaira(amount)} (${feeType}) for ${student.name} — balances updated.`;
+    paymentForm.reset();
     refreshBursary();
   });
+
+  const expenseForm = document.getElementById('expense-form');
+  if(expenseForm) expenseForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    addExpense({
+      description: document.getElementById('ex-desc').value.trim(),
+      category: document.getElementById('ex-category').value,
+      amount: document.getElementById('ex-amount').value,
+      date: document.getElementById('ex-date').value,
+      recordedBy: me ? me.name : 'Bursary'
+    });
+    const status = document.getElementById('expense-status');
+    status.hidden = false;
+    status.textContent = 'Expense recorded.';
+    expenseForm.reset();
+    document.getElementById('ex-date').value = new Date().toISOString().slice(0,10);
+    refreshBursary();
+  });
+
+  const exportFeesBtn = document.getElementById('export-fees-btn');
+  if(exportFeesBtn){
+    exportFeesBtn.addEventListener('click', () => {
+      const term = 'Term 1', session = CURRENT_SESSION;
+      let csv = 'Student,Class,Paid,Balance,Status\n';
+      students.forEach(s => {
+        const paid = getTotalPaid(s.id, term, session);
+        const bal = getBalance(s.id, term, session);
+        const status = getPaymentStatus(s.id, term, session);
+        csv += `"${s.name}","${s.class}",${paid},${bal},${status}\n`;
+      });
+      downloadCsv(csv, 'fee-report-' + term.replace(' ','') + '-' + session.replace('/','-') + '.csv');
+    });
+  }
+  const exportExpBtn = document.getElementById('export-expenses-btn');
+  if(exportExpBtn){
+    exportExpBtn.addEventListener('click', () => {
+      let csv = 'Description,Category,Amount,Date\n';
+      getExpenses().forEach(e => { csv += `"${e.description}","${e.category}",${e.amount},${e.date}\n`; });
+      downloadCsv(csv, 'expenses-report.csv');
+    });
+  }
+  function downloadCsv(csv, filename){
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 });
 </script>
 </div>
@@ -137,7 +303,35 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="script.js"></script>
 <script>
   const __user = requireRole(['Bursary']);
-  if (__user) paintUser(__user);
+  if (__user) { paintUser(__user); window.__dashUser = __user; }
+</script>
+<script>
+(function(){
+  const user = window.__dashUser;
+  document.querySelectorAll('.dash-section[data-requires]').forEach(sec => {
+    if(!hasPermission(user, sec.getAttribute('data-requires'))) sec.remove();
+  });
+  document.querySelectorAll('#dash-nav a[data-nav-key]').forEach(link => {
+    const key = link.getAttribute('data-nav-key');
+    if(!document.querySelector('.dash-section[data-key="' + key + '"]')) link.remove();
+  });
+
+  function activate(key){
+    document.querySelectorAll('.dash-section').forEach(s => { s.hidden = (s.getAttribute('data-key') !== key); });
+    document.querySelectorAll('#dash-nav a[data-nav-key]').forEach(a => a.classList.toggle('active', a.getAttribute('data-nav-key') === key));
+    const activeLink = document.querySelector('#dash-nav a[data-nav-key="' + key + '"]');
+    const titleEl = document.getElementById('dash-title');
+    if(titleEl) titleEl.textContent = activeLink ? activeLink.querySelector('span').textContent : '';
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  }
+
+  document.querySelectorAll('#dash-nav a[data-nav-key]').forEach(link => {
+    link.addEventListener('click', () => activate(link.getAttribute('data-nav-key')));
+  });
+
+  const firstLink = document.querySelector('#dash-nav a[data-nav-key]');
+  if(firstLink) activate(firstLink.getAttribute('data-nav-key'));
+})();
 </script>
 </body>
 </html>

@@ -446,3 +446,63 @@ table.dtable tbody tr:hover{ background: var(--cream-dim); }
 .photo-card .pc-tag{ position:relative; z-index:2; color: var(--gold-soft); font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; display:block; }
 
 
+
+/* =========================================================
+   PROFESSIONAL POLISH PASS
+   ========================================================= */
+
+/* Dashboards: responsive mobile nav (sidebar becomes a horizontal
+   scrollable bar above the content instead of overflowing off-screen) */
+@media (max-width: 860px){
+  .dash-shell{ flex-direction: column; }
+  .dash-sidebar{
+    width:100%; height:auto; position:static;
+    display:flex; align-items:center; gap:14px; padding:14px 16px;
+    overflow-x:auto; white-space:nowrap;
+  }
+  .dash-sidebar .brand-mini{ border-bottom:none; padding:0; margin:0; flex:none; }
+  .dash-sidebar .brand-mini .name{ display:none; }
+  .dash-role-tag{ margin:0; flex:none; }
+  .dash-nav{ display:flex; flex-direction:row; gap:6px; flex:1; overflow-x:auto; }
+  .dash-nav a{ flex:none; padding:8px 12px; }
+  .dash-nav a span{ display:none; }
+  .dash-sidebar .exit{ display:none; }
+  .dash-content{ padding:20px 16px 48px; }
+  .dash-topbar{ padding:14px 16px; }
+  .stat-cards{ grid-template-columns: 1fr 1fr; }
+  .form-inline{ grid-template-columns: 1fr; }
+}
+
+/* Subtle depth + hover lift for panels and cards — reads more like a
+   real product than flat boxes */
+.panel, .card, .stat-card-sm, .portal-card, .feature-card, .staff-card{
+  transition: box-shadow .18s ease, border-color .18s ease;
+}
+.panel:hover, .card:hover{
+  box-shadow: 0 4px 18px rgba(14,27,54,.06);
+}
+.stat-card-sm{ transition: transform .15s ease, box-shadow .15s ease; }
+.stat-card-sm:hover{ transform: translateY(-2px); box-shadow: 0 6px 16px rgba(14,27,54,.08); }
+
+/* Consistent button focus/hover feedback across the whole system */
+.btn, .btn-xs, button{ transition: background .15s ease, border-color .15s ease, transform .1s ease; }
+.btn:active, .btn-xs:active{ transform: scale(.98); }
+
+/* Empty-state styling for tables with nothing in them yet */
+table.dtable td[colspan]{
+  text-align:center; color: var(--ink-soft); font-style:italic; padding:28px 12px !important;
+}
+
+/* Section transitions in dashboards — quick fade instead of a hard cut */
+.dash-section{ animation: dashFadeIn .18s ease; }
+@keyframes dashFadeIn{ from{ opacity:0; transform: translateY(4px);} to{ opacity:1; transform:none; } }
+
+/* Sidebar nav icon alignment fix on desktop, kept crisp */
+.dash-nav a svg{ opacity:.85; }
+.dash-nav a.active svg{ opacity:1; }
+
+/* Tighter, more consistent panel headings */
+.panel h3{ letter-spacing:-.005em; }
+
+/* Sticky topbar shadow once content scrolls beneath it */
+.dash-topbar{ box-shadow: 0 1px 0 rgba(14,27,54,.06); }

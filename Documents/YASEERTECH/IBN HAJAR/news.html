@@ -11,9 +11,17 @@
 <script src="records.js"></script>
 </head>
 <body>
-<div class="announce">
-  <strong>Admission Now Open — 2026/2027 Session.</strong> Enrol your child in our Qur'an memorization &amp; academic boarding programme. <a href="admissions.html">Apply today &rarr;</a>
-</div>
+<div class="announce" id="site-banner" hidden></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const el = document.getElementById('site-banner');
+  const text = getSiteBanner();
+  if(text && text.trim()){
+    el.innerHTML = text;
+    el.hidden = false;
+  }
+});
+</script>
 <header class="site">
   <div class="nav-row">
     <a class="brand" href="index.html">
@@ -33,7 +41,6 @@
       <a class="" href="gallery.html">Gallery</a>
       <a class="" href="contact.html">Contact</a>
       <a class="nav-portal" href="portal.html">Staff &amp; Parent Login</a>
-      <a class="nav-cta" href="admissions.html">Apply Now</a>
     </nav>
     <button class="nav-toggle" aria-label="Toggle menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -81,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <img src="logo.svg" alt="Ibn Hajar Foundation-Zaria crest">
           <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
         </div>
-        <p style="color:rgba(255,255,255,.6); font-size:.88rem; max-width:32ch;">An Islamic boarding school for Qur'an memorization, Tajweed, Islamic studies and conventional academics — Primary &amp; Junior Secondary.</p>
+        <p style="color:rgba(255,255,255,.6); font-size:.88rem; max-width:32ch;">An Islamic boarding school dedicated to Qur'an memorization, Tajweed, Islamic Studies, and quality conventional education for Primary and Junior Secondary students.</p>
         <div style="display:flex; gap:12px; margin-top:16px;">
           <a href="#" aria-label="Facebook" style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.5 9.9v-7H7.9V12h2.6V9.8c0-2.6 1.5-4 3.9-4 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v7A10 10 0 0022 12z"/></svg></a>
           <a href="#" aria-label="Instagram" style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
