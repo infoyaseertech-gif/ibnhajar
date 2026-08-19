@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News & Announcements | Ibn Hajar Foundation-Zaria</title>
+<meta name="description" content="Latest news, resumption dates and admission notices from Ibn Hajar Foundation-Zaria.">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script src="auth.js"></script>
+<script src="records.js"></script>
+</head>
+<body>
+<div class="announce" id="site-banner" hidden></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const el = document.getElementById('site-banner');
+  const text = getSiteBanner();
+  if(text && text.trim()){
+    el.innerHTML = text;
+    el.hidden = false;
+  }
+});
+</script>
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="index.html">
+      <img src="logo.svg" alt="Ibn Hajar Foundation-Zaria crest logo">
+      <span class="brand-text">
+        <span class="name">IBN HAJAR FOUNDATION-ZARIA</span><br>
+        <span class="sub">Qur'an &middot; Academics &middot; Character</span>
+      </span>
+    </a>
+    <nav class="primary">
+      <a class="" href="index.html">Home</a>
+      <a class="" href="about.html">About Us</a>
+      <a class="" href="academics.html">Academics</a>
+      <a class="" href="admissions.html">Admissions</a>
+      <a class="" href="staff.html">Staff & Faculty</a>
+      <a class="active" href="news.html">News</a>
+      <a class="" href="gallery.html">Gallery</a>
+      <a class="" href="contact.html">Contact</a>
+      <a class="nav-portal" href="portal.html">Staff &amp; Parent Login</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html">Home</a> / News &amp; Announcements</div>
+    <h1>News &amp; Announcements</h1>
+    <p style="color:rgba(255,255,255,.75); max-width:60ch; margin:0;">Updates from the school office &mdash; resumption dates, admission notices and more.</p>
+  </div>
+</div>
+
+<section class="tight">
+  <div class="wrap">
+    <div id="news-list" style="display:grid; gap:18px; max-width:760px;">
+      <p>Loading&hellip;</p>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const list = document.getElementById('news-list');
+  const items = getAnnouncements();
+  if(!items.length){
+    list.innerHTML = '<p>No announcements yet — check back soon.</p>';
+    return;
+  }
+  list.innerHTML = items.map(a => `
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:10px;"><span class="star">&#9733;</span> ${a.date} &middot; ${a.postedBy || 'School Office'}</div>
+      <p style="margin:0; color:var(--ink);">${a.message}</p>
+    </div>
+  `).join('');
+});
+</script>
+<footer class="site">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="fbrand">
+          <img src="logo.svg" alt="Ibn Hajar Foundation-Zaria crest">
+          <span class="name">IBN HAJAR<br>FOUNDATION-ZARIA</span>
+        </div>
+        <p style="color:rgba(255,255,255,.6); font-size:.88rem; max-width:32ch;">An Islamic boarding school dedicated to Qur'an memorization, Tajweed, Islamic Studies, and quality conventional education for Primary and Junior Secondary students.</p>
+        <div style="display:flex; gap:12px; margin-top:16px;">
+          <a href="#" aria-label="Facebook" style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.5 9.9v-7H7.9V12h2.6V9.8c0-2.6 1.5-4 3.9-4 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v7A10 10 0 0022 12z"/></svg></a>
+          <a href="#" aria-label="Instagram" style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="#" aria-label="YouTube" style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.6-.5-5.3c-.3-1-.9-1.7-1.9-2C18.9 4.2 12 4.2 12 4.2s-6.9 0-8.6.5c-1 .3-1.6 1-1.9 2C1 8.4 1 12 1 12s0 3.6.5 5.3c.3 1 .9 1.7 1.9 2 1.7.5 8.6.5 8.6.5s6.9 0 8.6-.5c1-.3 1.6-1 1.9-2 .5-1.7.5-5.3.5-5.3zM9.8 15.5V8.5L15.8 12l-6 3.5z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="academics.html">Academics</a></li>
+          <li><a href="admissions.html">Admissions</a></li>
+          <li><a href="staff.html">Staff &amp; Faculty</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Portals</h4>
+        <ul>
+          <li><a href="portal.html">Principal Login</a></li>
+          <li><a href="portal.html">Class Teacher Login</a></li>
+          <li><a href="portal.html">Admin / Bursary Login</a></li>
+          <li><a href="portal.html">Parent Login</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>No. 52 Unguwar Katuka, Zaria City</li>
+          <li><a href="tel:07039606735">0703 960 6735</a></li>
+          <li><a href="tel:07035949233">0703 594 9233</a></li>
+          <li><a href="tel:08069091922">0806 909 1922</a></li>
+          <li><a href="mailto:ibnhajarfoundation@gmail.com">ibnhajarfoundation@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-motto">&ldquo;Raise yourself and build humankind&rdquo;</div>
+    <div class="footer-bottom">&copy; 2026 Ibn Hajar Foundation-Zaria. All rights reserved.</div>
+  </div>
+</footer>
+
+<a class="whatsapp-float" href="https://wa.me/2347039606735" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 32 32" fill="#fff"><path d="M16.04 3C9.37 3 3.97 8.4 3.97 15.07c0 2.36.66 4.56 1.8 6.44L3 29l7.68-2.72c1.8.98 3.86 1.55 6.05 1.55h.01c6.67 0 12.07-5.4 12.07-12.07C28.81 8.4 23.41 3 16.04 3zm0 21.9h-.01a10 10 0 0 1-5.1-1.4l-.37-.22-3.79 1.34 1.35-3.7-.24-.38a9.96 9.96 0 0 1-1.53-5.3c0-5.52 4.5-10.02 10.02-10.02 5.52 0 10.02 4.5 10.02 10.02 0 5.52-4.5 10.02-10.02 10.02z"/></svg>
+</a>
+
+<script src="script.js"></script>
+</body>
+</html>
